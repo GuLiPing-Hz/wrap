@@ -29,7 +29,6 @@ namespace Wrap {
 	} HeadType;
 
 	class ClientSocketBase;
-
 	class HttpSocketBase;
 
 	class DataDecoderBase {

@@ -112,6 +112,8 @@
     <ClInclude Include="wrap\reactor.h" />
     <ClInclude Include="wrap\set_thread_name_win.h" />
     <ClInclude Include="wrap\thread.h" />
+    <ClInclude Include="wrap\thread_informer.h" />
+    <ClInclude Include="wrap\thread_mgr.h" />
     <ClInclude Include="wrap\timer.h" />
     <ClInclude Include="wrap\typedefs.h" />
     <ClInclude Include="zip\crypt.h" />
@@ -157,6 +159,8 @@
     <ClCompile Include="wrap\http_download_mgr.cpp" />
     <ClCompile Include="wrap\reactor.cpp" />
     <ClCompile Include="wrap\thread.cpp" />
+    <ClCompile Include="wrap\thread_informer.cpp" />
+    <ClCompile Include="wrap\thread_mgr.cpp" />
     <ClCompile Include="wrap\timer.cpp" />
     <ClCompile Include="zip\ioapi.c" />
     <ClCompile Include="zip\unzip.c" />

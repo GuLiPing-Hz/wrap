@@ -11,7 +11,7 @@ namespace Wrap{
 	class PoolMgr;
 	class PoolObj{
 		friend class PoolMgr;
-	protected:
+	public:
 		PoolObj(const char* n = NULL) :ref(1){
 			if (n == NULL){
 				name[0] = 0;
@@ -118,6 +118,26 @@ namespace Wrap{
 	protected:
 		LISTPOOLO lst;
 	};
+
+	class VoidGuard
+	{
+	public:
+		VoidGuard(void *p) : m_p(p){}
+		virtual ~VoidGuard(){ if (m_p)free(m_p); }
+	private:
+		void *m_p;
+	};
+
+
+	//使用std::shared_ptr
+	// 	template<class Cls>
+	// 	class SafePointer
+	// 	{
+	// 	public:
+	// 		SafePointer(Cls* p) :mPointer(p){}
+	// 		~SafePointer(){ if (mPointer)delete mPointer; }
+	// 	private:
+	// 		Cls* mPointer;
 }
 
 #endif // POOL_H__

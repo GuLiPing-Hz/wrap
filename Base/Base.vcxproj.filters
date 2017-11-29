@@ -177,6 +177,12 @@
     <ClInclude Include="wrap\httpcontent.h">
       <Filter>wrap</Filter>
     </ClInclude>
+    <ClInclude Include="wrap\thread_informer.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\thread_mgr.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -306,6 +312,12 @@
       <Filter>wrap</Filter>
     </ClCompile>
     <ClCompile Include="wrap\http_download.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\thread_mgr.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\thread_informer.cpp">
       <Filter>wrap</Filter>
     </ClCompile>
   </ItemGroup>

@@ -4,6 +4,8 @@
 #include "wrap/client_socket.h"
 #include "wrap/mutex.h"
 #include "wrap/timer.h"
+#include "wrap/pool.h"
+#include <memory>
 
 static void print_number(double x) {
 	double y = x;
@@ -70,6 +72,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	ip = Wrap::ClientSocket::GetIpFromHost("qq.com", false);
 
 	WSACleanup();
+
+	std::shared_ptr<Wrap::PoolObj> p(new Wrap::PoolObj());
 
 	return 0;
 }
