@@ -103,6 +103,10 @@
     <ClInclude Include="wrap\event_handler.h" />
     <ClInclude Include="wrap\file_mgr.h" />
     <ClInclude Include="wrap\funcs.h" />
+    <ClInclude Include="wrap\httpcontent.h" />
+    <ClInclude Include="wrap\http_download.h" />
+    <ClInclude Include="wrap\http_download_mgr.h" />
+    <ClInclude Include="wrap\http_downtype.h" />
     <ClInclude Include="wrap\mutex.h" />
     <ClInclude Include="wrap\pool.h" />
     <ClInclude Include="wrap\reactor.h" />
@@ -148,6 +152,9 @@
     <ClCompile Include="wrap\event_handler.cpp" />
     <ClCompile Include="wrap\file_mgr.cpp" />
     <ClCompile Include="wrap\funcs.cpp" />
+    <ClCompile Include="wrap\httpcontent.cpp" />
+    <ClCompile Include="wrap\http_download.cpp" />
+    <ClCompile Include="wrap\http_download_mgr.cpp" />
     <ClCompile Include="wrap\reactor.cpp" />
     <ClCompile Include="wrap\thread.cpp" />
     <ClCompile Include="wrap\timer.cpp" />
