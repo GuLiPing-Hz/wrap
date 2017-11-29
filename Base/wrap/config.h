@@ -11,11 +11,12 @@
 成员变量											mAaaBbbCcc
 静态成员变量										sAaaBbbCcc
 成员函数											aaaBbbCcc
+局部变量											aaa_bbb_ccc 或者 aaaBbbCcc
 
 文件命名											aaa_bbb_ccc
 
 
-有些不符合以上规则的文件可能来自webrtc项目
+有些不符合以上规则的文件可能来自webrtc,bitcoin项目
 */
 
 //借鉴cocos
@@ -115,5 +116,51 @@ cls& operator=(const cls&) = delete
 #ifndef MIN
 #define MIN(a,b) (((a)>(b))?(b):(a))
 #endif//MIN
+
+
+#if defined _WIN32
+void Printf(const char* format, ...);
+
+// VERBOSE
+#define LOGV(...) Printf(__VA_ARGS__)
+// DEBUG
+#define LOGD(...) Printf(__VA_ARGS__)
+// INFO
+#define LOGI(...) Printf(__VA_ARGS__)
+//WARN
+#define LOGW(...) Printf(__VA_ARGS__)
+// ERROR
+#define LOGE(...) Printf(__VA_ARGS__)
+
+#elif defined(__APPLE__) && !defined(ANDROID)
+
+//IOS
+// VERBOSE
+#define LOGV(...) printf(__VA_ARGS__)
+// DEBUG
+#define LOGD(...) printf(__VA_ARGS__)
+// INFO
+#define LOGI(...) printf(__VA_ARGS__)
+//WARN
+#define LOGW(...) printf(__VA_ARGS__)
+// ERROR
+#define LOGE(...) printf(__VA_ARGS__)
+
+#else //defined(ANDROID)	//Android
+#include <android/log.h>
+// VERBOSE
+#define LOGV(...)   __android_log_print(ANDROID_LOG_VERBOSE, "JniNetUtil", __VA_ARGS__)
+// DEBUG
+#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG , "JniNetUtil ", __VA_ARGS__)
+// INFO
+#define LOGI(...)    __android_log_print(ANDROID_LOG_INFO  , "JniNetUtil ",__VA_ARGS__)
+//WARN
+#define LOGW(...)  __android_log_print(ANDROID_LOG_WARN  , "JniNetUtil ", __VA_ARGS__)
+// ERROR
+#define LOGE(...)   __android_log_print(ANDROID_LOG_ERROR  , "JniNetUtil ",__VA_ARGS__)
+
+#define LOGGLP(...)  __android_log_print(ANDROID_LOG_INFO  , " GLP ",__VA_ARGS__)
+
+#endif
 
 #endif//CONFIG__H___

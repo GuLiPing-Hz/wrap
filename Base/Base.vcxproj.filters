@@ -22,15 +22,18 @@
     <Filter Include="zlib">
       <UniqueIdentifier>{e39e4ac1-ee7d-49ad-9239-ccd7f2bd4de0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="crypto">
+      <UniqueIdentifier>{32342043-e2a6-4e8d-bf04-b9b5e07fe7cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compat">
+      <UniqueIdentifier>{852c0f89-96bc-47dd-94d1-9f18acb69542}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="zlib\crc32.h">
@@ -78,11 +81,89 @@
     <ClInclude Include="zip\crypt.h">
       <Filter>zip</Filter>
     </ClInclude>
-    <ClInclude Include="mutex.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="crypto\ripemd160.h">
+      <Filter>crypto</Filter>
     </ClInclude>
-    <ClInclude Include="config.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="crypto\sha1.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\sha256.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\sha512.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\aes.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\chacha20.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\common.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\ctaes.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\hmac_sha256.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\hmac_sha512.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\md5.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="compat\endian.h">
+      <Filter>compat</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\event.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\event_handler.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\file_mgr.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\funcs.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\mutex.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\pool.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\reactor.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\set_thread_name_win.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\thread.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\timer.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\typedefs.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\client_socket.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\config.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\counter.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\data_block.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\data_decoder.h">
+      <Filter>wrap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +226,66 @@
     </ClCompile>
     <ClCompile Include="zip\ioapi.c">
       <Filter>zip</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\sha1.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\sha256.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\sha256_sse4.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\sha512.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\aes.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\chacha20.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\ctaes.c">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\hmac_sha256.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\hmac_sha512.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\ripemd160.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\md5.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\event.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\event_handler.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\file_mgr.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\funcs.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\reactor.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\thread.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\timer.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\client_socket.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\data_decoder.cpp">
+      <Filter>wrap</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

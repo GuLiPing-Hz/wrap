@@ -81,10 +81,35 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="config.h" />
-    <ClInclude Include="mutex.h" />
+    <ClInclude Include="compat\endian.h" />
+    <ClInclude Include="crypto\aes.h" />
+    <ClInclude Include="crypto\chacha20.h" />
+    <ClInclude Include="crypto\common.h" />
+    <ClInclude Include="crypto\ctaes.h" />
+    <ClInclude Include="crypto\hmac_sha256.h" />
+    <ClInclude Include="crypto\hmac_sha512.h" />
+    <ClInclude Include="crypto\md5.h" />
+    <ClInclude Include="crypto\ripemd160.h" />
+    <ClInclude Include="crypto\sha1.h" />
+    <ClInclude Include="crypto\sha256.h" />
+    <ClInclude Include="crypto\sha512.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
+    <ClInclude Include="wrap\client_socket.h" />
+    <ClInclude Include="wrap\config.h" />
+    <ClInclude Include="wrap\counter.h" />
+    <ClInclude Include="wrap\data_block.h" />
+    <ClInclude Include="wrap\data_decoder.h" />
+    <ClInclude Include="wrap\event.h" />
+    <ClInclude Include="wrap\event_handler.h" />
+    <ClInclude Include="wrap\file_mgr.h" />
+    <ClInclude Include="wrap\funcs.h" />
+    <ClInclude Include="wrap\mutex.h" />
+    <ClInclude Include="wrap\pool.h" />
+    <ClInclude Include="wrap\reactor.h" />
+    <ClInclude Include="wrap\set_thread_name_win.h" />
+    <ClInclude Include="wrap\thread.h" />
+    <ClInclude Include="wrap\timer.h" />
+    <ClInclude Include="wrap\typedefs.h" />
     <ClInclude Include="zip\crypt.h" />
     <ClInclude Include="zip\ioapi.h" />
     <ClInclude Include="zip\unzip.h" />
@@ -103,7 +128,29 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp" />
+    <ClCompile Include="crypto\aes.cpp" />
+    <ClCompile Include="crypto\chacha20.cpp" />
+    <ClCompile Include="crypto\ctaes.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="crypto\hmac_sha256.cpp" />
+    <ClCompile Include="crypto\hmac_sha512.cpp" />
+    <ClCompile Include="crypto\md5.cpp" />
+    <ClCompile Include="crypto\ripemd160.cpp" />
+    <ClCompile Include="crypto\sha1.cpp" />
+    <ClCompile Include="crypto\sha256.cpp" />
+    <ClCompile Include="crypto\sha256_sse4.cpp" />
+    <ClCompile Include="crypto\sha512.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="wrap\client_socket.cpp" />
+    <ClCompile Include="wrap\data_decoder.cpp" />
+    <ClCompile Include="wrap\event.cpp" />
+    <ClCompile Include="wrap\event_handler.cpp" />
+    <ClCompile Include="wrap\file_mgr.cpp" />
+    <ClCompile Include="wrap\funcs.cpp" />
+    <ClCompile Include="wrap\reactor.cpp" />
+    <ClCompile Include="wrap\thread.cpp" />
+    <ClCompile Include="wrap\timer.cpp" />
     <ClCompile Include="zip\ioapi.c" />
     <ClCompile Include="zip\unzip.c" />
     <ClCompile Include="zip\zip.c" />
