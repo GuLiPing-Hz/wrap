@@ -1,7 +1,6 @@
 ﻿#include "thread.h"
 
 #ifdef WIN32
-
 #include <assert.h>
 #include <process.h>
 #include <stdio.h>

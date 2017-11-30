@@ -2,6 +2,13 @@
 #include <stdio.h>
 #include "config.h"
 
+//把只有头文件的文件引入进来，这样编译的时候可以看看有没有错误
+#include "pool.h"
+#include "mutex.h"
+#include "seq_map.h"
+
+Wrap::PoolMgr* Wrap::PoolMgr::sIns = NULL;
+
 #ifdef WIN32
 
 #include <stdio.h>

@@ -8,7 +8,7 @@
 
 #ifdef WIN32
 
-#include <windows.h>
+#include <Windows.h>
 #include "../mutex.h"
 
 #else

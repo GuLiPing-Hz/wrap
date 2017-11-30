@@ -219,6 +219,9 @@
     <ClInclude Include="wrap\native_buffer.h">
       <Filter>wrap</Filter>
     </ClInclude>
+    <ClInclude Include="wrap\seq_map.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

@@ -5,6 +5,7 @@
 #include "wrap/mutex.h"
 #include "wrap/timer.h"
 #include "wrap/pool.h"
+#include "wrap/seq_map.h"
 #include <memory>
 
 static void print_number(double x) {

@@ -3,7 +3,6 @@
 
 #ifdef WIN32
 
-#include <windows.h>
 #include "../typedefs.h"
 
 #else
@@ -59,6 +58,8 @@ public:
 };
 
 #ifdef WIN32
+
+typedef void * HANDLE;
 
 class EventWindows : public EventWrapper {
 public:

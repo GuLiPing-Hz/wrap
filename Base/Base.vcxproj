@@ -121,6 +121,7 @@
     <ClInclude Include="wrap\native_buffer.h" />
     <ClInclude Include="wrap\pool.h" />
     <ClInclude Include="wrap\reactor.h" />
+    <ClInclude Include="wrap\seq_map.h" />
     <ClInclude Include="wrap\thread_informer.h" />
     <ClInclude Include="wrap\thread_mgr.h" />
     <ClInclude Include="wrap\timer.h" />

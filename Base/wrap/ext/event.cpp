@@ -2,6 +2,7 @@
 #include "event.h"
 
 #if defined(_WIN32)
+#include <Windows.h>
 #pragma comment(lib,"winmm.lib")
 #include "Mmsystem.h"
 #else

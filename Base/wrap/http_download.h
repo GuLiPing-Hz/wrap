@@ -109,26 +109,25 @@ namespace Wrap {
 		bool startDownload();
 		bool isIdle(){ return (m_gDownloadState.state != DownloadState::DS_BUSY); }
 	private:
-		CHttpDownloadMgr*               m_pMgr;
+		CHttpDownloadMgr*           m_pMgr;
 		bool 						m_bInit;
-		bool							m_isNeedSaveData;
-
-		bool							m_bTransferEncodingChunked;
+		bool						m_isNeedSaveData;
+		bool						m_bTransferEncodingChunked;
 		enum eContentEncoding{
 			CE_Null,
 			CE_Deflate,
 			CE_Gzip,
 		};
-		eContentEncoding m_eContentEncoding;
-		int 							m_nTryDownload;
+		eContentEncoding			m_eContentEncoding;
+		int 						m_nTryDownload;
 
-		std::string				m_sOldUrl;
+		std::string					m_sOldUrl;
 
 		std::string 				m_sUrl;
-		char							m_sProtocol[20];
+		char						m_sProtocol[20];
 		char 						m_sHost[256];
-		char							m_sIp[256];
-		char							m_sRequest[1024];	// 协议、服务器主机、请求内容
+		char						m_sIp[256];
+		char						m_sRequest[1024];	// 协议、服务器主机、请求内容
 		short						m_nPort;
 		//断点续传
 		int							m_nFrom;
@@ -137,22 +136,22 @@ namespace Wrap {
 		int							m_nPostDataLen;
 
 		char*						m_sRequestHeader;
-		int 							m_nRequestHeaderSize;
+		int 						m_nRequestHeaderSize;
 		char*						m_sResponseHeader;
-		int 							m_nResponseHeaderSize;
+		int 						m_nResponseHeaderSize;
 
-		bool							m_bIsRecvResponseHeader;
+		bool						m_bIsRecvResponseHeader;
 
 		//chunk 定义,如果http回应里面没有content lenght的处理
-		long							m_nCurChunkSize;// 当前块的大小。
-		long							m_nCurChunkDownloadSize;// 当前块已经下载字节数。
-		long							m_nTotalChunkSize;// 所有块总共的累计字节数。
+		long						m_nCurChunkSize;// 当前块的大小。
+		long						m_nCurChunkDownloadSize;// 当前块已经下载字节数。
+		long						m_nTotalChunkSize;// 所有块总共的累计字节数。
 		//保存下载状态
-		DownloadState                  m_gDownloadState;
-		ONPROGRESS                    m_funProgress;
+		DownloadState               m_gDownloadState;
+		ONPROGRESS                  m_funProgress;
 
-		FILE*							m_fileTmp;
-		PreciseTimer					m_gTimer;
+		FILE*						m_fileTmp;
+		PreciseTimer				m_gTimer;
 
 		DataBlock					m_gUnEncodingContent;
 	public:
@@ -163,12 +162,12 @@ namespace Wrap {
 			ZLIB_GZIP_INFLATING,
 			ZLIB_GZIP_HEADER,
 		};
-		int								zlib_init;
-		z_stream						z;
+		int							zlib_init;
+		z_stream					z;
 
 		//保存下载信息
-		DownloadInfo         m_gDownloadInfo;
+		DownloadInfo				m_gDownloadInfo;
 	};
 
-} /* namespace NetworkUtil */
+} /* namespace Wrap */
 #endif /* HTTPDOWNLOAD_H_ */
