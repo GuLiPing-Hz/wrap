@@ -576,10 +576,10 @@ bool JS_Native_getBuffer(JSContext *cx, unsigned int argc, jsval *vp){
 	JSB_PRECONDITION2(cobj, cx, false, "JS_Native_getBuffer : Invalid Native Object");
 	if (argc == 0)
 	{
-		const NetworkUtil::DataBlock& block = cobj->getBuffer();
+		const Wrap::DataBlockLocal65535* block = cobj->getBuffer();
 
 		JS::RootedValue jsret(cx);
-		jsret = STRING_TO_JSVAL(JS_NewStringCopyN(cx, block.getBuf(), block.getPos()));
+		jsret = STRING_TO_JSVAL(JS_NewStringCopyN(cx, block->getBuf(), block->getPos()));
 		args.rval().set(jsret);
 
 		return true;
@@ -598,7 +598,7 @@ bool JS_Native_getBufferLen(JSContext *cx, unsigned int argc, jsval *vp){
 	JSB_PRECONDITION2(cobj, cx, false, "JS_Native_getBufferLen : Invalid Native Object");
 	if (argc == 0)
 	{
-		unsigned int len = cobj->getBuffer().getPos();
+		unsigned int len = cobj->getBuffer()->getPos();
 
 		JS::RootedValue jsret(cx);
 		jsret = UINT_TO_JSVAL(len);
@@ -763,7 +763,7 @@ bool JS_Native_readString(JSContext *cx, unsigned int argc, jsval *vp)
 	JSB_PRECONDITION2(cobj, cx, false, "JS_Native_readString : Invalid Native Object");
 	if (argc == 0)
 	{
-		short c = 0;
+		unsigned short c = 0;
 		cobj->readString(c, nullptr);//读取字符串长度
 
 		char* p = new char[c];
@@ -846,7 +846,7 @@ bool JS_Native_readStringWithUtf8(JSContext *cx, unsigned int argc, jsval *vp){
 	JSB_PRECONDITION2(cobj, cx, false, "JS_Native_readStringWithUtf8 : Invalid Native Object");
 	if (argc == 0)
 	{
-		short c = 0;
+		unsigned short c = 0;
 		cobj->readString(c, nullptr);//读取字符串长度
 
 		char* p = new char[c];
@@ -1010,7 +1010,7 @@ void register_NativeBuffer(JSContext *cx, JS::HandleObject ns)
 	JS_SetProperty(cx, proto, "__nativeObj", JS::TrueHandleValue);
 	JS_SetProperty(cx, proto, "__is_ref", JS::TrueHandleValue);
 	// add the proto and JSClass to the type->js info hash table
-	jsb_register_class<NativeBuffer>(cx, jsb_nativebuffer_class, proto, JS::NullPtr());
+	jsb_register_class<Wrap::NativeBuffer>(cx, jsb_nativebuffer_class, proto, JS::NullPtr());
 }
 
 #endif // COCOS_PROJECT
