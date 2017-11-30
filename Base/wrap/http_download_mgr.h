@@ -65,5 +65,5 @@ public:
 	NetReactor					mReactor;
 };
 
-} /* namespace NetworkUtil */
+} /* namespace Wrap */
 #endif /* HTTPDOWNLOADMGR_H_ */

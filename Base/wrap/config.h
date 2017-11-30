@@ -163,4 +163,8 @@ void Printf(const char* format, ...);
 
 #endif
 
+#define ThreadObj void*
+#define UTIL_EVENT_10_SEC   10000
+#define UTIL_EVENT_INFINITE 0xffffffff
+
 #endif//CONFIG__H___

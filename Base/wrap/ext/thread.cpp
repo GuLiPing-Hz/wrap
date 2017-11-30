@@ -1,7 +1,8 @@
 ﻿#include "thread.h"
 
-#ifdef WIN32
 #include <assert.h>
+#ifdef WIN32
+
 #include <process.h>
 #include <stdio.h>
 #include "set_thread_name_win.h"
@@ -9,8 +10,6 @@
 #else
 
 #include <algorithm>
-
-#include <assert.h>
 #include <errno.h>
 #include <string.h>  // strncpy
 #include <unistd.h>
@@ -22,11 +21,9 @@
 #include <sys/prctl.h>
 #endif//NETUTIL_LINUX
 
-#include "mutex_wrapper.h"
-#include "sleep.h"
-
 #endif // WIN32
 
+#include "../funcs.h"
 
 #ifdef _WIN32
 
@@ -495,7 +492,8 @@ bool ThreadPosix::Stop() {
 
 bool ThreadPosix::WaitFor(unsigned int ms)
 {
-	CriticalSectionScoped cs(crit_state_);
+    //CriticalSectionScoped cs(crit_state_);
+    Wrap::Guard lock(crit_state_);
 	if(alive_)
 		return (kEventSignaled == event_->Wait(ms));
 	return true;

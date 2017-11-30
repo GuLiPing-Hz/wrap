@@ -1,26 +1,20 @@
 ﻿#ifndef EVENT__WRAPPER__H__
 #define EVENT__WRAPPER__H__
 
-#ifdef WIN32
+#ifndef WIN32
+#include <pthread.h>
+#endif // WIN32
 
+#include <time.h>
 #include "../typedefs.h"
 
-#else
-
-#include <pthread.h>
-#include <time.h>
-#include "thread.h"
-
-#endif // WIN32
+class ThreadWrapper;
 
 enum EventTypeWrapper {
 	kEventSignaled = 1,
 	kEventError = 2,
 	kEventTimeout = 3
 };
-
-#define UTIL_EVENT_10_SEC   10000
-#define UTIL_EVENT_INFINITE 0xffffffff
 
 class EventWrapper {
 public:

@@ -1,4 +1,4 @@
-#include "buffer_value.h"
+﻿#include "buffer_value.h"
 
 namespace Wrap{
 	void ReleaseBufferValue(BufferValue* &value){

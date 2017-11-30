@@ -1,5 +1,6 @@
 ﻿#include "../config.h"
 #include "event.h"
+#include "thread.h"
 
 #if defined(_WIN32)
 #include <Windows.h>

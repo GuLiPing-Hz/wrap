@@ -58,7 +58,7 @@ namespace Wrap{
 #ifndef TEST_UDP
 		ThreadInformer(MessageCenter* center);
 #else
-		ThreadInformer(NetworkUtil::Reactor *pReactor, const char *host = "127.0.0.1", short port = 27876);
+		ThreadInformer(Wrap::Reactor *pReactor, const char *host = "127.0.0.1", short port = 27876);
 #endif
 		virtual ~ThreadInformer();
 		//通知消息队列处理消息,,,这里消息只是充当事件的角色

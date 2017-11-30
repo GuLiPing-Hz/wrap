@@ -1,7 +1,8 @@
-#ifndef JSON_VALUE_H___
+ï»¿#ifndef JSON_VALUE_H___
 #define JSON_VALUE_H___
 
 #include <vector>
+#include <string>
 
 namespace Wrap{
 
@@ -9,22 +10,22 @@ namespace Wrap{
 	public:
 		enum eDataType {
 			type_unknow = 0,
-			type_char = 1,//[16+1][Êı×é³¤¶È][data]
+			type_char = 1,//[16+1][æ•°ç»„é•¿åº¦][data]
 			type_short = 2,
 			type_int = 3,
 			type_int64 = 4,
 			type_float = 5,//[]
-			//17ĞèÒªµ¥¶ÀÁà³öÀ´
+			//17éœ€è¦å•ç‹¬æ‹å‡ºæ¥
 			type_str = 17,
 
-			//ÏÂÃæÁ½¸öÖ÷Òª¸øBufferUnitArraÊ¹ÓÃ
-			type_custom = 6,//[16+6][Êı×é³¤¶È][{½á¹¹³¤¶È,½á¹¹Ìå}]...
+			//ä¸‹é¢ä¸¤ä¸ªä¸»è¦ç»™BufferUnitArraä½¿ç”¨
+			type_custom = 6,//[16+6][æ•°ç»„é•¿åº¦][{ç»“æ„é•¿åº¦,ç»“æ„ä½“}]...
 			type_array = 16,//
 		};
 		eDataType type;
 
 		struct Data{
-			union BaseData {//ÁªºÏÊı¾İ½á¹¹
+			union BaseData {//è”åˆæ•°æ®ç»“æ„
 				char c;
 				short s;
 				int i;
@@ -32,7 +33,7 @@ namespace Wrap{
 				float f;
 			};
 			BaseData base;
-			//×Ö·û´®ĞèÒªÁíÍâ´æ·Å
+			//å­—ç¬¦ä¸²éœ€è¦å¦å¤–å­˜æ”¾
 			std::string str;
 		};
 		Data data;

@@ -1078,4 +1078,4 @@ int CHttpDownload::formatRequestHeader( char* SendHeader, int SendHeaderSize, ch
 	return nRet;
 }
 
-} /* namespace NetworkUtil */
+} /* namespace Wrap */

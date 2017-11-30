@@ -7,25 +7,18 @@
 #define THREAD_WRAPPER__H__
 
 #ifdef WIN32
-
 #include <Windows.h>
-#include "../mutex.h"
-
 #else
-
-#include "config.h"
 #include <pthread.h>
-
 #endif // WIN32
 
-
-//#include "common_types.h"
+#include "../config.h"
+#include "../mutex.h"
 #include "../typedefs.h"
 #include "event.h"
 
 // Object that will be passed by the spawned thread when it enters the callback
 // function.
-#define ThreadObj void*
 
 // Callback function that the spawned thread will enter once spawned.
 // A return value of false is interpreted as that the function has no
@@ -47,7 +40,7 @@ enum eThreadPriority {
 class ThreadWrapper {
 public:
 	enum { kThreadMaxNameLength = 64 };
-	ThreadWrapper() :m_funStart(0), m_funEnd(0){}
+	ThreadWrapper() :m_funStart(NULL), m_funEnd(NULL){}
 	virtual ~ThreadWrapper() {}
 
 	// Factory method. Constructor disabled.
@@ -148,8 +141,6 @@ private:
 };
 
 #else
-
-class EventWrapper;
 
 int ConvertToSystemPriority(eThreadPriority priority, int min_prio,
 	int max_prio);

@@ -200,4 +200,4 @@ void CHttpDownloadMgr::doNext(bool success,CHttpDownload* worker)
 	}
 }
 
-} /* namespace NetworkUtil */
+} /* namespace Wrap */
