@@ -50,15 +50,93 @@ namespace Wrap{
 		}
 	};
 
+	class MessageCenter;
+
+	class ThreadInformer : public UdpSocket, public ThreadMgr
+	{
+	public:
+#ifndef TEST_UDP
+		ThreadInformer(MessageCenter* center);
+#else
+		ThreadInformer(NetworkUtil::Reactor *pReactor, const char *host = "127.0.0.1", short port = 27876);
+#endif
+		virtual ~ThreadInformer();
+		//通知消息队列处理消息,,,这里消息只是充当事件的角色
+		void inform();
+		//初始化
+		virtual int init();
+		virtual bool unInit();
+		//UdpSocket
+		virtual void onFDRead();
+		//CThreadMgr
+		virtual void processMessage(int id, void* pData){};
+		virtual void processIdle();
+
+	protected:
+		//处理 > MSG_SEND_DATA 的消息 msg.v 无需做处理
+		virtual void dealCustomMsg(MSGINFO* msg){}
+	private:
+		void dealMessageInner();
+	private:
+		static bool sIsInit;
+		MessageCenter* mMsgCenter;
+		EventWrapper* mtEventInform;
+	};
+
 	class ReserveData;
 
-	struct MessageCenter{
-		virtual int postMessage(int serverId, ClientSocket *conn, int cmd, void *v, int len, int seq,bool back = true) = 0;
-		virtual int getMessage(MSGINFO& msg) = 0;
-		virtual int sendToSvr(ClientSocket* pSvr, const char* buf, int len) = 0;
+	class MessageCenter{
+	public:
+		virtual ~MessageCenter(){}
+
+		int postMessage(int serverId, ClientSocket *conn, int cmd, void *v, int len, int seq, bool back = true){
+			Guard lock(mMutex);
+			if (m_requestlist.size() > 1000)//请求队列最多1000
+				return -1;
+
+			char* data = new char[len];
+			if (!data)
+				return -1;
+			memcpy(data, v, len);//拷贝数据
+
+			MSGINFO msg = { 0 };
+			msg.server = serverId;
+			msg.con = conn;
+			msg.cmd = cmd;
+			msg.v = (void*)data;
+			msg.len = len;
+			msg.back = back;
+			msg.wseq = seq;// m_Counter.Get();
+			m_requestlist.push_back(msg);
+
+			//通知消息处理器处理
+			getInformer()->inform();
+			return seq;
+		}
+		int getMessage(MSGINFO& msg){
+			Guard lock(mMutex);
+			if (!m_requestlist.empty()) {
+				msg = m_requestlist.front();
+				m_requestlist.pop_front();
+				return 0;
+			}
+			return -1;
+		}
+		int sendToSvr(ClientSocket* pSvr, const char* buf, int len){
+			if (pSvr && !pSvr->isConnected())
+				return -1;
+
+			return pSvr->sendBuf(buf, len) ? 0 : -1;
+		}
+
+		virtual ThreadInformer* getInformer() = 0;
 		virtual void addTimeout(int seq, ReserveData* data) = 0;
 		virtual void delTimeout(int seq) = 0;
 		virtual void onTimeout(ReserveData* data) = 0;
+
+	protected:
+		std::list<Wrap::MSGINFO> m_requestlist;
+		Mutex mMutex;
 	};
 
 	class ReserveData
@@ -96,37 +174,6 @@ namespace Wrap{
 		time_t t;
 		int timeout;
 		MessageCenter* msgCenter;
-	};
-
-	class ThreadInformer : public UdpSocket, public ThreadMgr
-	{
-	public:
-#ifndef TEST_UDP
-		ThreadInformer(MessageCenter* center);
-#else
-		ThreadInformer(NetworkUtil::Reactor *pReactor,const char *host = "127.0.0.1",short port = 27876);
-#endif
-		virtual ~ThreadInformer();
-		//通知消息队列处理消息,,,这里消息只是充当事件的角色
-		void inform();
-		//初始化
-		virtual int init();
-		virtual bool unInit();
-		//UdpSocket
-		virtual void onFDRead();
-		//CThreadMgr
-		virtual void processMessage(int id, void* pData){};
-		virtual void processIdle();
-
-	protected:
-		//处理 > MSG_SEND_DATA 的消息 msg.v 无需做处理
-		virtual void dealCustomMsg(MSGINFO* msg){}
-	private:
-		void dealMessageInner();
-	private:
-		static bool sIsInit;
-		MessageCenter* mMsgCenter;
-		EventWrapper* mtEventInform;
 	};
 
 }

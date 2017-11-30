@@ -28,6 +28,15 @@
     <Filter Include="compat">
       <UniqueIdentifier>{852c0f89-96bc-47dd-94d1-9f18acb69542}</UniqueIdentifier>
     </Filter>
+    <Filter Include="charset">
+      <UniqueIdentifier>{350d28ba-edba-461c-b7f7-836d3bcf548f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="jni">
+      <UniqueIdentifier>{a4d326ba-24b5-4cf6-80d4-9a641d577e1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wrap\ext">
+      <UniqueIdentifier>{532a57c3-bdc5-487b-8340-f0b4d4e2e3fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -117,9 +126,6 @@
     <ClInclude Include="compat\endian.h">
       <Filter>compat</Filter>
     </ClInclude>
-    <ClInclude Include="wrap\event.h">
-      <Filter>wrap</Filter>
-    </ClInclude>
     <ClInclude Include="wrap\event_handler.h">
       <Filter>wrap</Filter>
     </ClInclude>
@@ -136,12 +142,6 @@
       <Filter>wrap</Filter>
     </ClInclude>
     <ClInclude Include="wrap\reactor.h">
-      <Filter>wrap</Filter>
-    </ClInclude>
-    <ClInclude Include="wrap\set_thread_name_win.h">
-      <Filter>wrap</Filter>
-    </ClInclude>
-    <ClInclude Include="wrap\thread.h">
       <Filter>wrap</Filter>
     </ClInclude>
     <ClInclude Include="wrap\timer.h">
@@ -181,6 +181,42 @@
       <Filter>wrap</Filter>
     </ClInclude>
     <ClInclude Include="wrap\thread_mgr.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="charset\Chinese.h">
+      <Filter>charset</Filter>
+    </ClInclude>
+    <ClInclude Include="charset\Utf.h">
+      <Filter>charset</Filter>
+    </ClInclude>
+    <ClInclude Include="charset\CharsetCodec.h">
+      <Filter>charset</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\JniHelper.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\buffer_value.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\ext\univalue.h">
+      <Filter>wrap\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\ext\univalue_escapes.h">
+      <Filter>wrap\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\ext\univalue_utffilter.h">
+      <Filter>wrap\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\ext\event.h">
+      <Filter>wrap\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\ext\thread.h">
+      <Filter>wrap\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\ext\set_thread_name_win.h">
+      <Filter>wrap\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\native_buffer.h">
       <Filter>wrap</Filter>
     </ClInclude>
   </ItemGroup>
@@ -278,9 +314,6 @@
     <ClCompile Include="crypto\md5.cpp">
       <Filter>crypto</Filter>
     </ClCompile>
-    <ClCompile Include="wrap\event.cpp">
-      <Filter>wrap</Filter>
-    </ClCompile>
     <ClCompile Include="wrap\event_handler.cpp">
       <Filter>wrap</Filter>
     </ClCompile>
@@ -291,9 +324,6 @@
       <Filter>wrap</Filter>
     </ClCompile>
     <ClCompile Include="wrap\reactor.cpp">
-      <Filter>wrap</Filter>
-    </ClCompile>
-    <ClCompile Include="wrap\thread.cpp">
       <Filter>wrap</Filter>
     </ClCompile>
     <ClCompile Include="wrap\timer.cpp">
@@ -318,6 +348,42 @@
       <Filter>wrap</Filter>
     </ClCompile>
     <ClCompile Include="wrap\thread_informer.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="charset\Utf.cpp">
+      <Filter>charset</Filter>
+    </ClCompile>
+    <ClCompile Include="charset\CharsetCodec.cpp">
+      <Filter>charset</Filter>
+    </ClCompile>
+    <ClCompile Include="charset\Chinese.cpp">
+      <Filter>charset</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\JniHelper.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\buffer_value.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\ext\univalue.cpp">
+      <Filter>wrap\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\ext\univalue_get.cpp">
+      <Filter>wrap\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\ext\univalue_read.cpp">
+      <Filter>wrap\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\ext\univalue_write.cpp">
+      <Filter>wrap\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\ext\event.cpp">
+      <Filter>wrap\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\ext\thread.cpp">
+      <Filter>wrap\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\native_buffer.cpp">
       <Filter>wrap</Filter>
     </ClCompile>
   </ItemGroup>

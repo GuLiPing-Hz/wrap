@@ -31,209 +31,207 @@
 
 #ifdef _WIN32
 
-namespace Wrap{
-
-	ThreadWindows::ThreadWindows(ThreadRunFunction func, ThreadObj obj,
-		eThreadPriority prio, const char* thread_name)
-		: ThreadWrapper(),
-		run_function_(func),
-		obj_(obj),
-		alive_(false),
-		dead_(true),
-		do_not_close_handle_(false),
-		prio_(prio),
-		thread_(NULL),
-		id_(0),
-		set_thread_name_(false) {
-		name_[0] = 0;
-		if (thread_name != NULL) {
-			// Set the thread name to appear in the VS debugger.
-			set_thread_name_ = true;
-			strncpy(name_, thread_name, kThreadMaxNameLength);
-		}
+ThreadWindows::ThreadWindows(ThreadRunFunction func, ThreadObj obj,
+	eThreadPriority prio, const char* thread_name)
+	: ThreadWrapper(),
+	run_function_(func),
+	obj_(obj),
+	alive_(false),
+	dead_(true),
+	do_not_close_handle_(false),
+	prio_(prio),
+	thread_(NULL),
+	id_(0),
+	set_thread_name_(false) {
+	name_[0] = 0;
+	if (thread_name != NULL) {
+		// Set the thread name to appear in the VS debugger.
+		set_thread_name_ = true;
+		strncpy(name_, thread_name, kThreadMaxNameLength);
 	}
+}
 
-	ThreadWindows::~ThreadWindows() {
+ThreadWindows::~ThreadWindows() {
 #ifdef _DEBUG
-		assert(!alive_);
+	assert(!alive_);
 #endif
-		if (thread_) {
-			CloseHandle(thread_);
-		}
+	if (thread_) {
+		CloseHandle(thread_);
 	}
+}
 
-	uint32_t ThreadWrapper::GetThreadId() {
-		return GetCurrentThreadId();
-	}
+uint32_t ThreadWrapper::GetThreadId() {
+	return GetCurrentThreadId();
+}
 
-	unsigned int WINAPI ThreadWindows::StartThread(LPVOID lp_parameter) {
-		ThreadWindows* pThread = static_cast<ThreadWindows*>(lp_parameter);
-		if (!pThread)
-			return 0;
-		if (pThread->m_funStart)
-			pThread->m_funStart((unsigned int)pThread);
-		//线程运行
-		pThread->Run();
-
-		if (pThread->m_funEnd)
-			pThread->m_funEnd((unsigned int)pThread);
+unsigned int WINAPI ThreadWindows::StartThread(LPVOID lp_parameter) {
+	ThreadWindows* pThread = static_cast<ThreadWindows*>(lp_parameter);
+	if (!pThread)
 		return 0;
+	if (pThread->m_funStart)
+		pThread->m_funStart((unsigned int)pThread);
+	//线程运行
+	pThread->Run();
+
+	if (pThread->m_funEnd)
+		pThread->m_funEnd((unsigned int)pThread);
+	return 0;
+}
+
+bool ThreadWindows::Start(unsigned int& thread_id) {
+	if (!run_function_) {
+		return false;
 	}
+	do_not_close_handle_ = false;
 
-	bool ThreadWindows::Start(unsigned int& thread_id) {
-		if (!run_function_) {
-			return false;
-		}
-		do_not_close_handle_ = false;
-
-		// Set stack size to 1M
-		thread_ = (HANDLE)_beginthreadex(NULL, 1024 * 1024, StartThread, (void*)this,
-			CREATE_SUSPENDED, &thread_id);//创建一个暂停的线程
-		if (thread_ == NULL) {
-			return false;
-		}
-		id_ = thread_id;
-
-		switch (prio_) {
-		case kLowPriority:
-			SetThreadPriority(thread_, THREAD_PRIORITY_BELOW_NORMAL);
-			break;
-		case kNormalPriority:
-			SetThreadPriority(thread_, THREAD_PRIORITY_NORMAL);
-			break;
-		case kHighPriority:
-			SetThreadPriority(thread_, THREAD_PRIORITY_ABOVE_NORMAL);
-			break;
-		case kHighestPriority:
-			SetThreadPriority(thread_, THREAD_PRIORITY_HIGHEST);
-			break;
-		case kRealtimePriority:
-			SetThreadPriority(thread_, THREAD_PRIORITY_TIME_CRITICAL);
-			break;
-		};
-
-		ResumeThread(thread_);//唤起线程
-		return true;
+	// Set stack size to 1M
+	thread_ = (HANDLE)_beginthreadex(NULL, 1024 * 1024, StartThread, (void*)this,
+		CREATE_SUSPENDED, &thread_id);//创建一个暂停的线程
+	if (thread_ == NULL) {
+		return false;
 	}
+	id_ = thread_id;
 
-	bool ThreadWindows::SetAffinity(const int* processor_numbers,
-		const unsigned int amount_of_processors) {
-		DWORD_PTR processor_bit_mask = 0;
-		for (unsigned int processor_index = 0;
-			processor_index < amount_of_processors;
-			++processor_index) {
-			// Convert from an array with processor numbers to a bitmask
-			// Processor numbers start at zero.
-			// TODO(hellner): this looks like a bug. Shouldn't the '=' be a '+='?
-			// Or even better |=
-			processor_bit_mask = 1 << processor_numbers[processor_index];
-		}
-		return SetThreadAffinityMask(thread_, processor_bit_mask) != 0;
+	switch (prio_) {
+	case kLowPriority:
+		SetThreadPriority(thread_, THREAD_PRIORITY_BELOW_NORMAL);
+		break;
+	case kNormalPriority:
+		SetThreadPriority(thread_, THREAD_PRIORITY_NORMAL);
+		break;
+	case kHighPriority:
+		SetThreadPriority(thread_, THREAD_PRIORITY_ABOVE_NORMAL);
+		break;
+	case kHighestPriority:
+		SetThreadPriority(thread_, THREAD_PRIORITY_HIGHEST);
+		break;
+	case kRealtimePriority:
+		SetThreadPriority(thread_, THREAD_PRIORITY_TIME_CRITICAL);
+		break;
+	};
+
+	ResumeThread(thread_);//唤起线程
+	return true;
+}
+
+bool ThreadWindows::SetAffinity(const int* processor_numbers,
+	const unsigned int amount_of_processors) {
+	DWORD_PTR processor_bit_mask = 0;
+	for (unsigned int processor_index = 0;
+		processor_index < amount_of_processors;
+		++processor_index) {
+		// Convert from an array with processor numbers to a bitmask
+		// Processor numbers start at zero.
+		// TODO(hellner): this looks like a bug. Shouldn't the '=' be a '+='?
+		// Or even better |=
+		processor_bit_mask = 1 << processor_numbers[processor_index];
 	}
+	return SetThreadAffinityMask(thread_, processor_bit_mask) != 0;
+}
 
-	void ThreadWindows::SetNotAlive() {
-		alive_ = false;
-	}
+void ThreadWindows::SetNotAlive() {
+	alive_ = false;
+}
 
-	bool ThreadWindows::WaitFor(unsigned int ms)
-	{
-		if (thread_&&alive_)
-			return (WAIT_OBJECT_0 == WaitForSingleObject(thread_, ms));
-		return true;
-	}
+bool ThreadWindows::WaitFor(unsigned int ms)
+{
+	if (thread_&&alive_)
+		return (WAIT_OBJECT_0 == WaitForSingleObject(thread_, ms));
+	return true;
+}
 
-	bool ThreadWindows::Terminate(unsigned long ecode)
-	{
-		if (thread_)
-			return !!TerminateThread(thread_, ecode);
-		return true;
-	}
+bool ThreadWindows::Terminate(unsigned long ecode)
+{
+	if (thread_)
+		return !!TerminateThread(thread_, ecode);
+	return true;
+}
 
-	bool ThreadWindows::Stop() {
-		//critsect_stop_->Enter();
-		critsect_stop_.lock();
+bool ThreadWindows::Stop() {
+	//critsect_stop_->Enter();
+	critsect_stop_.lock();
 
-		// Prevents the handle from being closed in ThreadWindows::Run()
-		do_not_close_handle_ = true;
-		alive_ = false;
-		bool signaled = false;
-		if (thread_ && !dead_) {
-			//critsect_stop_->Leave();
-			critsect_stop_.unlock();
-
-			// Wait up to 2 seconds for the thread to complete.
-			if (WAIT_OBJECT_0 == WaitForSingleObject(thread_, 2000)) {
-				signaled = true;
-			}
-			//critsect_stop_->Enter();
-			critsect_stop_.lock();
-		}
-		if (thread_) {
-			CloseHandle(thread_);
-			thread_ = NULL;
-		}
+	// Prevents the handle from being closed in ThreadWindows::Run()
+	do_not_close_handle_ = true;
+	alive_ = false;
+	bool signaled = false;
+	if (thread_ && !dead_) {
 		//critsect_stop_->Leave();
 		critsect_stop_.unlock();
 
-		if (dead_ || signaled) {
-			return true;
+		// Wait up to 2 seconds for the thread to complete.
+		if (WAIT_OBJECT_0 == WaitForSingleObject(thread_, 2000)) {
+			signaled = true;
 		}
-		else {
-			return false;
-		}
+		//critsect_stop_->Enter();
+		critsect_stop_.lock();
+	}
+	if (thread_) {
+		CloseHandle(thread_);
+		thread_ = NULL;
+	}
+	//critsect_stop_->Leave();
+	critsect_stop_.unlock();
+
+	if (dead_ || signaled) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+void ThreadWindows::Run() {
+	alive_ = true;
+	dead_ = false;
+
+	// All tracing must be after event_->Set to avoid deadlock in Trace.
+	if (set_thread_name_)
+	{
+		//WEBRTC_TRACE(kTraceStateInfo, kTraceUtility, id_,"Thread with name:%s started ", name_);
+		SetThreadName(-1, name_); // -1, set thread name for the calling thread.
+	}
+	else
+	{
+		//WEBRTC_TRACE(kTraceStateInfo, kTraceUtility, id_,"Thread without name started");
 	}
 
-	void ThreadWindows::Run() {
-		alive_ = true;
-		dead_ = false;
-
-		// All tracing must be after event_->Set to avoid deadlock in Trace.
-		if (set_thread_name_)
+	do
+	{
+		if (run_function_)
 		{
-			//WEBRTC_TRACE(kTraceStateInfo, kTraceUtility, id_,"Thread with name:%s started ", name_);
-			SetThreadName(-1, name_); // -1, set thread name for the calling thread.
-		}
-		else
-		{
-			//WEBRTC_TRACE(kTraceStateInfo, kTraceUtility, id_,"Thread without name started");
-		}
-
-		do
-		{
-			if (run_function_)
-			{
-				if (!run_function_(obj_))
-				{
-					alive_ = false;
-				}
-			}
-			else
+			if (!run_function_(obj_))
 			{
 				alive_ = false;
 			}
-		} while (alive_);
-
-		if (set_thread_name_) {
-			//WEBRTC_TRACE(kTraceStateInfo, kTraceUtility, id_,"Thread with name:%s stopped", name_);
 		}
 		else
 		{
-			//WEBRTC_TRACE(kTraceStateInfo, kTraceUtility, id_,"Thread without name stopped");
+			alive_ = false;
 		}
+	} while (alive_);
 
-		//critsect_stop_->Enter();
-		critsect_stop_.lock();
+	if (set_thread_name_) {
+		//WEBRTC_TRACE(kTraceStateInfo, kTraceUtility, id_,"Thread with name:%s stopped", name_);
+	}
+	else
+	{
+		//WEBRTC_TRACE(kTraceStateInfo, kTraceUtility, id_,"Thread without name stopped");
+	}
 
-		if (thread_ && !do_not_close_handle_) {
-			HANDLE thread = thread_;
-			thread_ = NULL;
-			CloseHandle(thread);
-		}
-		dead_ = true;
+	//critsect_stop_->Enter();
+	critsect_stop_.lock();
 
-		//critsect_stop_->Leave();
-		critsect_stop_.unlock();
-	};
+	if (thread_ && !do_not_close_handle_) {
+		HANDLE thread = thread_;
+		thread_ = NULL;
+		CloseHandle(thread);
+	}
+	dead_ = true;
+
+	//critsect_stop_->Leave();
+	critsect_stop_.unlock();
+};
 
 #else 
 
@@ -377,7 +375,7 @@ bool ThreadPosix::Start(unsigned int& thread_id)
 	}
 	{
 		//CriticalSectionScoped cs(crit_state_);
-		Guard lock(crit_state_);
+		Wrap::Guard lock(crit_state_);
 		dead_ = false;
 	}
 
@@ -458,7 +456,7 @@ bool ThreadPosix::SetAffinity(const int* , const unsigned int) {
 
 void ThreadPosix::SetNotAlive() {
 	//CriticalSectionScoped cs(crit_state_);
-	Guard lock(crit_state_);
+	Wrap::Guard lock(crit_state_);
 	alive_ = false;
 }
 
@@ -466,7 +464,7 @@ bool ThreadPosix::Stop() {
 	bool dead = false;
 	{
 		//CriticalSectionScoped cs(crit_state_);
-		Guard lock(crit_state_);
+		Wrap::Guard lock(crit_state_);
 		alive_ = false;
 		dead = dead_;
 	}
@@ -478,7 +476,7 @@ bool ThreadPosix::Stop() {
 		event_->Wait(UTIL_EVENT_10_SEC);
 		{
 			//CriticalSectionScoped cs(crit_state_);
-			Guard lock(crit_state_);
+			Wrap::Guard lock(crit_state_);
 			dead = dead_;
 		}
 	}
@@ -514,7 +512,7 @@ bool ThreadPosix::Terminate(unsigned long ecode)
 void ThreadPosix::Run() {
 	{
 		//CriticalSectionScoped cs(crit_state_);
-		Guard lock(crit_state_);
+		Wrap::Guard lock(crit_state_);
 		alive_ = true;
 	}
 #if (defined(NETUTIL_LINUX) || defined(NETUTIL_ANDROID))
@@ -536,7 +534,7 @@ void ThreadPosix::Run() {
 	while (alive) {
 		run = run_function_(obj_);
 		//CriticalSectionScoped cs(crit_state_);
-		Guard lock(crit_state_);
+		Wrap::Guard lock(crit_state_);
 		if (!run) {
 			alive_ = false;
 		}
@@ -555,7 +553,7 @@ void ThreadPosix::Run() {
 	}
 	{
 		//CriticalSectionScoped cs(crit_state_);
-		Guard lock(crit_state_);
+		Wrap::Guard lock(crit_state_);
 		dead_ = true;
 	}
 	//inform the stop
@@ -575,4 +573,3 @@ ThreadWrapper* ThreadWrapper::CreateThread(ThreadRunFunction func,
 #endif
 }
 
-}

@@ -72,3 +72,19 @@ void SleepMs(int msecs) {
 	nanosleep(&short_wait, &remainder);
 #endif
 }
+
+
+std::string XorString(const char *data, int datalen, const char *key, int len) {
+	char *pBuf = new char[datalen];
+	if (!pBuf)
+		return "oom";
+
+	for (int i = 0; i < datalen; i++) {
+		pBuf[i] = data[i] ^ key[i % len];
+	}
+
+	std::string ret(pBuf, datalen);
+	delete[] pBuf;
+	return ret;
+}
+

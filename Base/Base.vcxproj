@@ -81,6 +81,9 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="charset\CharsetCodec.h" />
+    <ClInclude Include="charset\Chinese.h" />
+    <ClInclude Include="charset\Utf.h" />
     <ClInclude Include="compat\endian.h" />
     <ClInclude Include="crypto\aes.h" />
     <ClInclude Include="crypto\chacha20.h" />
@@ -93,25 +96,31 @@
     <ClInclude Include="crypto\sha1.h" />
     <ClInclude Include="crypto\sha256.h" />
     <ClInclude Include="crypto\sha512.h" />
+    <ClInclude Include="jni\JniHelper.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="wrap\client_socket.h" />
     <ClInclude Include="wrap\config.h" />
     <ClInclude Include="wrap\counter.h" />
     <ClInclude Include="wrap\data_block.h" />
     <ClInclude Include="wrap\data_decoder.h" />
-    <ClInclude Include="wrap\event.h" />
     <ClInclude Include="wrap\event_handler.h" />
+    <ClInclude Include="wrap\ext\event.h" />
+    <ClInclude Include="wrap\ext\set_thread_name_win.h" />
+    <ClInclude Include="wrap\ext\thread.h" />
+    <ClInclude Include="wrap\ext\univalue.h" />
+    <ClInclude Include="wrap\ext\univalue_escapes.h" />
+    <ClInclude Include="wrap\ext\univalue_utffilter.h" />
     <ClInclude Include="wrap\file_mgr.h" />
     <ClInclude Include="wrap\funcs.h" />
     <ClInclude Include="wrap\httpcontent.h" />
     <ClInclude Include="wrap\http_download.h" />
     <ClInclude Include="wrap\http_download_mgr.h" />
     <ClInclude Include="wrap\http_downtype.h" />
+    <ClInclude Include="wrap\buffer_value.h" />
     <ClInclude Include="wrap\mutex.h" />
+    <ClInclude Include="wrap\native_buffer.h" />
     <ClInclude Include="wrap\pool.h" />
     <ClInclude Include="wrap\reactor.h" />
-    <ClInclude Include="wrap\set_thread_name_win.h" />
-    <ClInclude Include="wrap\thread.h" />
     <ClInclude Include="wrap\thread_informer.h" />
     <ClInclude Include="wrap\thread_mgr.h" />
     <ClInclude Include="wrap\timer.h" />
@@ -134,6 +143,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp" />
+    <ClCompile Include="charset\CharsetCodec.cpp" />
+    <ClCompile Include="charset\Chinese.cpp" />
+    <ClCompile Include="charset\Utf.cpp" />
     <ClCompile Include="crypto\aes.cpp" />
     <ClCompile Include="crypto\chacha20.cpp" />
     <ClCompile Include="crypto\ctaes.c">
@@ -147,18 +159,25 @@
     <ClCompile Include="crypto\sha256.cpp" />
     <ClCompile Include="crypto\sha256_sse4.cpp" />
     <ClCompile Include="crypto\sha512.cpp" />
+    <ClCompile Include="jni\JniHelper.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="wrap\client_socket.cpp" />
     <ClCompile Include="wrap\data_decoder.cpp" />
-    <ClCompile Include="wrap\event.cpp" />
     <ClCompile Include="wrap\event_handler.cpp" />
+    <ClCompile Include="wrap\ext\event.cpp" />
+    <ClCompile Include="wrap\ext\thread.cpp" />
+    <ClCompile Include="wrap\ext\univalue.cpp" />
+    <ClCompile Include="wrap\ext\univalue_get.cpp" />
+    <ClCompile Include="wrap\ext\univalue_read.cpp" />
+    <ClCompile Include="wrap\ext\univalue_write.cpp" />
     <ClCompile Include="wrap\file_mgr.cpp" />
     <ClCompile Include="wrap\funcs.cpp" />
     <ClCompile Include="wrap\httpcontent.cpp" />
     <ClCompile Include="wrap\http_download.cpp" />
     <ClCompile Include="wrap\http_download_mgr.cpp" />
+    <ClCompile Include="wrap\buffer_value.cpp" />
+    <ClCompile Include="wrap\native_buffer.cpp" />
     <ClCompile Include="wrap\reactor.cpp" />
-    <ClCompile Include="wrap\thread.cpp" />
     <ClCompile Include="wrap\thread_informer.cpp" />
     <ClCompile Include="wrap\thread_mgr.cpp" />
     <ClCompile Include="wrap\timer.cpp" />

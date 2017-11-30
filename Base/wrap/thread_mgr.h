@@ -9,12 +9,9 @@
 	*/
 //#define _STLP_OUTERMOST_HEADER_ID 0x40
 #include <list>
-#include "thread.h"
+#include "ext/thread.h"
 
 namespace Wrap{
-
-	class EventWrapper;
-	class ThreadWrapper;
 	class Mutex;
 
 	enum

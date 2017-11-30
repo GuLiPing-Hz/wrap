@@ -11,7 +11,7 @@
 
 #include "http_download.h"
 #include "reactor.h"
-#include "thread.h"
+#include "ext/thread.h"
 #include <list>
 #include "mutex.h"
 
