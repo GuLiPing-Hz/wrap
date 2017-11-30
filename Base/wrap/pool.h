@@ -1,4 +1,4 @@
-﻿#ifndef POOL_H__
+#ifndef POOL_H__
 #define POOL_H__
 
 #include <assert.h>
@@ -130,14 +130,15 @@ namespace Wrap{
 
 
 	//使用std::shared_ptr
-	// 	template<class Cls>
-	// 	class SafePointer
-	// 	{
-	// 	public:
-	// 		SafePointer(Cls* p) :mPointer(p){}
-	// 		~SafePointer(){ if (mPointer)delete mPointer; }
-	// 	private:
-	// 		Cls* mPointer;
+//     template<class Cls>
+//     class SafePointer
+//     {
+//     public:
+//         SafePointer(Cls* p) :mPointer(p){}
+//         ~SafePointer(){ if (mPointer)delete mPointer; }
+//     private:
+//         Cls* mPointer;
+//     };
 }
 
 #endif // POOL_H__

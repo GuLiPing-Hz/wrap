@@ -1,4 +1,4 @@
-#ifndef NATIVE_BUFFER_H___
+ï»¿#ifndef NATIVE_BUFFER_H___
 #define NATIVE_BUFFER_H___
 
 #include <string>
@@ -25,7 +25,7 @@ namespace Wrap{
 	class BufferValue;
 
 	/*
-	´ó¶Ëbuffer
+	å¤§ç«¯buffer
 	*/
 	class NativeBuffer
 #ifdef COCOS_PROJECT
@@ -44,7 +44,7 @@ namespace Wrap{
 	public:
 		static NativeBuffer *Create();
 #endif
-		//¶ÁĞ´Î»ÖÃ¹é0
+		//è¯»å†™ä½ç½®å½’0
 		void clearBuffer();
 
 		void moveBuffer(char *&data, unsigned int len);
@@ -58,7 +58,7 @@ namespace Wrap{
 		/**
 		*
 		* @param c
-		* @return ÊÇ·ñĞ´Èë³É¹¦
+		* @return æ˜¯å¦å†™å…¥æˆåŠŸ
 		*/
 		template<typename T>
 		bool writeType(const T c);
@@ -116,11 +116,11 @@ namespace Wrap{
 		DataBlockLocal65535 data_;
 		bool swap_;
 
-		//¼ÇÂ¼¶ÁÈ¡Î»ÖÃ
+		//è®°å½•è¯»å–ä½ç½®
 		unsigned int readPos_;
 	};
 
-	//×Ô¶¯½âÎöÍøÂçµÄĞ­ÒéÊı¾İ
+	//è‡ªåŠ¨è§£æç½‘ç»œçš„åè®®æ•°æ®
 	BufferValue* AutoParseNativeBufferEx(NativeBuffer *nativeBuf);
 
 }

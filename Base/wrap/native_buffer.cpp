@@ -1,4 +1,4 @@
-#include "native_buffer.h"
+ï»¿#include "native_buffer.h"
 #include <memory>
 #include "buffer_value.h"
 
@@ -24,8 +24,8 @@ namespace Wrap{
 			len = 4;
 		}
 		else if (type == BufferValue::type_int64) {
-			//ÕâÀï jsÒıÇæÄ¬ÈÏ°Ñlong long ĞÍÊı¾İ×ª»»Îªstirng£¬ËùÒÔĞèÒªÊı×Ö±È½ÏµÄÊ±ºò¼ÇµÃ×ªint
-			nativeBuf->readInt64(ret->data.base.ll);//Ö±½ÓÎÒÕâÀï°ÑËü×ªÁË
+			//è¿™é‡Œ jså¼•æ“é»˜è®¤æŠŠlong long å‹æ•°æ®è½¬æ¢ä¸ºstirngï¼Œæ‰€ä»¥éœ€è¦æ•°å­—æ¯”è¾ƒçš„æ—¶å€™è®°å¾—è½¬int
+			nativeBuf->readInt64(ret->data.base.ll);//ç›´æ¥æˆ‘è¿™é‡ŒæŠŠå®ƒè½¬äº†
 			len = 8;
 		}
 		else if (type == BufferValue::type_float) {
@@ -34,7 +34,7 @@ namespace Wrap{
 		}
 		else if (type == BufferValue::type_str) {
 			ret->data.str = nativeBuf->readString();
-			len = 2 + (int)ret->data.str.length();//×Ö·û´®³¤¶È+×Ö·û´®
+			len = 2 + (int)ret->data.str.length();//å­—ç¬¦ä¸²é•¿åº¦+å­—ç¬¦ä¸²
 		}
 		else {
 			ret->type = BufferValue::type_unknow;
@@ -53,45 +53,45 @@ namespace Wrap{
 		ret = new BufferValue(); //PoolMgr::GetIns()->getFromPool<BufferValue>("BufferValue");
 		do {
 			char type;
-			nativeBuf->readChar(type);//¶ÁÈ¡±êÖ¾Î»
+			nativeBuf->readChar(type);//è¯»å–æ ‡å¿—ä½
 
-			if (type > 22)//Òì³£type
+			if (type > 22)//å¼‚å¸¸type
 				break;
 
-			if (type > BufferValue::type_array + 1) {//×Ö·û´®½âÎö²»ÄÜ·ÅÔÚÕâÀï
-				char realType = type & 0xf;//Êı¾İ¾ßÌåÀàĞÍ
+			if (type > BufferValue::type_array + 1) {//å­—ç¬¦ä¸²è§£æä¸èƒ½æ”¾åœ¨è¿™é‡Œ
+				char realType = type & 0xf;//æ•°æ®å…·ä½“ç±»å‹
 				short arraLen;
 				nativeBuf->readShort(arraLen);
 				// Log.i("readNativeBufferData realType=" + realType + ",arraLen=" + arraLen);
 
-				BufferValue *arra = new BufferValue(); //PoolMgr::GetIns()->getFromPool<BufferValue>("BufferValue");//Êı×é´æ´¢
-				arra->type = (BufferValue::eDataType) realType;//Êı×éµÄ¾ßÌåÀàĞÍ
-				if (realType == 6) {//×Ô¶¨Òå½á¹¹Êı¾İ
+				BufferValue *arra = new BufferValue(); //PoolMgr::GetIns()->getFromPool<BufferValue>("BufferValue");//æ•°ç»„å­˜å‚¨
+				arra->type = (BufferValue::eDataType) realType;//æ•°ç»„çš„å…·ä½“ç±»å‹
+				if (realType == 6) {//è‡ªå®šä¹‰ç»“æ„æ•°æ®
 					//arra->isInner = true;
-					if (arraLen > 0) {//²»ÊÇ¿ÕÊı×é
+					if (arraLen > 0) {//ä¸æ˜¯ç©ºæ•°ç»„
 						for (int i = 0; i < arraLen; i++) {
-							//¶ÁÈ¡Êı¾İ½á¹¹³¤¶È
+							//è¯»å–æ•°æ®ç»“æ„é•¿åº¦
 							short structLen;
 							nativeBuf->readShort(structLen);
 							// Log.i("readNativeBufferData structLen = " + structLen);
 
 							int tempLen = 0;
-							BufferValue *struc = new BufferValue(); //PoolMgr::GetIns()->getFromPool<BufferValue>("BufferValue");//Êı¾İ½á¹¹
+							BufferValue *struc = new BufferValue(); //PoolMgr::GetIns()->getFromPool<BufferValue>("BufferValue");//æ•°æ®ç»“æ„
 							//struc->isInner = false;
 							struc->type = BufferValue::type_custom;
 							while (tempLen < structLen) {
 								char tempType;
 								nativeBuf->readChar(tempType);
-								tempLen += 1;//1×Ö½Ú
+								tempLen += 1;//1å­—èŠ‚
 
 								int inLen = 0;
 								BufferValue *tempRet = ReadNativeBufferValue(nativeBuf, tempType, inLen);
-								struc->list.push_back(tempRet);//°ÑÖµ¼ÇÂ¼ÏÂÀ´
+								struc->list.push_back(tempRet);//æŠŠå€¼è®°å½•ä¸‹æ¥
 
-								if (inLen == 0) {//³öÏÖÒì³£ÁË£¡£¡£¡£¬
+								if (inLen == 0) {//å‡ºç°å¼‚å¸¸äº†ï¼ï¼ï¼ï¼Œ
 									int remainLen = structLen - tempLen;
 									if (remainLen > 0) {
-										//°Ñ¶àÓàµÄÊı¾İÌø¹ıÒ»ÏÂ
+										//æŠŠå¤šä½™çš„æ•°æ®è·³è¿‡ä¸€ä¸‹
 										nativeBuf->skipBuffer(remainLen);
 									}
 									break;
@@ -99,7 +99,7 @@ namespace Wrap{
 
 								tempLen += inLen;
 							}
-							arra->list.push_back(struc);//·ÅÈë½á¹¹Êı¾İ
+							arra->list.push_back(struc);//æ”¾å…¥ç»“æ„æ•°æ®
 						}
 					}
 				}
@@ -108,7 +108,7 @@ namespace Wrap{
 					for (int i = 0; i < arraLen; i++) {
 						int inLen = 0;
 						BufferValue *tempRet = ReadNativeBufferValue(nativeBuf, realType, inLen);
-						arra->list.push_back(tempRet);//°ÑÖµ¼ÇÂ¼ÏÂÀ´
+						arra->list.push_back(tempRet);//æŠŠå€¼è®°å½•ä¸‹æ¥
 					}
 				}
 				ret->list.push_back(arra);
@@ -116,7 +116,7 @@ namespace Wrap{
 			else {
 				int inLen = 0;
 				BufferValue *tempRet = ReadNativeBufferValue(nativeBuf, type, inLen);
-				ret->list.push_back(tempRet);//°ÑÖµ¼ÇÂ¼ÏÂÀ´
+				ret->list.push_back(tempRet);//æŠŠå€¼è®°å½•ä¸‹æ¥
 			}
 
 		} while (nativeBuf->hasData());
@@ -147,7 +147,7 @@ namespace Wrap{
 		//int glp = 1;
 	}
 
-	//¶ÁĞ´Î»ÖÃ¹é0
+	//è¯»å†™ä½ç½®å½’0
 	void NativeBuffer::clearBuffer() {
 		readPos_ = 0;
 		data_.initPos();
@@ -211,18 +211,18 @@ namespace Wrap{
 	}
 
 	bool NativeBuffer::writeString(const unsigned short len, const char *c) {
-		if (writeType(len))//Ğ´Èë×Ö·û´®³¤¶È
-			return data_.append(c, len) >= 0;//Ğ´Èë×Ö·û´®  ÕâÀï¿ÉÒÔĞ´ÈëÒ»¸ö¿ÕµÄ×Ö·û´®
+		if (writeType(len))//å†™å…¥å­—ç¬¦ä¸²é•¿åº¦
+			return data_.append(c, len) >= 0;//å†™å…¥å­—ç¬¦ä¸²  è¿™é‡Œå¯ä»¥å†™å…¥ä¸€ä¸ªç©ºçš„å­—ç¬¦ä¸²
 		else
 			return false;
 	}
 
 	bool NativeBuffer::writeStringNoLen(const unsigned short len, const char *c) {
-		return data_.append(c, len) > 0;//Ğ´Èë×Ö·û´®
+		return data_.append(c, len) > 0;//å†™å…¥å­—ç¬¦ä¸²
 	}
 
 	bool NativeBuffer::readBuffer(char *c, unsigned int len) {
-		if (readPos_ + len > data_.getPos())//Ô½½çÁË
+		if (readPos_ + len > data_.getPos())//è¶Šç•Œäº†
 			return false;
 
 		memcpy(c, data_.getBuf() + readPos_, len);
@@ -271,7 +271,7 @@ namespace Wrap{
 		if (c && ret)
 			return readBuffer(c, len);
 		else {
-			readPos_ -= 2;//°Ñ2×Ö½Ú»¹»ØÈ¥
+			readPos_ -= 2;//æŠŠ2å­—èŠ‚è¿˜å›å»
 			return ret;
 		}
 	}
@@ -295,14 +295,14 @@ namespace Wrap{
 
 	std::string NativeBuffer::readString() {
 		unsigned short c = 0;
-		readString(c, nullptr);//¶ÁÈ¡×Ö·û´®³¤¶È
+		readString(c, nullptr);//è¯»å–å­—ç¬¦ä¸²é•¿åº¦
 
 		std::string ret;
 		char *p = new char[c];
 		if (p) {
-			std::unique_ptr<char> pAuto(p);//×Ô¶¯Ö¸Õë
+			std::unique_ptr<char> pAuto(p);//è‡ªåŠ¨æŒ‡é’ˆ
 			std::string str;
-			if (readString(c, p)) {//¶ÁÈ¡×Ö·û´®
+			if (readString(c, p)) {//è¯»å–å­—ç¬¦ä¸²
 				std::string temp(p, c);
 				ret = std::move(temp);
 			}
@@ -620,7 +620,7 @@ bool JS_Native_clearBuffer(JSContext *cx, unsigned int argc, jsval *vp){
 	JSB_PRECONDITION2(cobj, cx, false, "JS_Native_clearBuffer : Invalid Native Object");
 	if (argc == 0)
 	{
-		cobj->clearBuffer();//Çå¿Õbuffer
+		cobj->clearBuffer();//æ¸…ç©ºbuffer
 		args.rval().setUndefined();
 
 		return true;
@@ -764,13 +764,13 @@ bool JS_Native_readString(JSContext *cx, unsigned int argc, jsval *vp)
 	if (argc == 0)
 	{
 		unsigned short c = 0;
-		cobj->readString(c, nullptr);//¶ÁÈ¡×Ö·û´®³¤¶È
+		cobj->readString(c, nullptr);//è¯»å–å­—ç¬¦ä¸²é•¿åº¦
 
 		char* p = new char[c];
 		if (p){
-			std::unique_ptr<char> pAuto(p);//×Ô¶¯Ö¸Õë
+			std::unique_ptr<char> pAuto(p);//è‡ªåŠ¨æŒ‡é’ˆ
 			std::string str;
-			if (cobj->readString(c, p)){//¶ÁÈ¡×Ö·û´®
+			if (cobj->readString(c, p)){//è¯»å–å­—ç¬¦ä¸²
 				std::string temp(p, c);
 				str = std::move(temp);
 			}
@@ -810,9 +810,9 @@ bool JS_Native_readStringNoLen(JSContext *cx, unsigned int argc, jsval *vp){
 
 		char* p = new char[len];
 		if (p){
-			std::unique_ptr<char>  pAuto(p);//×Ô¶¯Ö¸Õë
+			std::unique_ptr<char>  pAuto(p);//è‡ªåŠ¨æŒ‡é’ˆ
 			std::string str;
-			if (cobj->readBuffer(p, len)){//¶ÁÈ¡×Ö·û´®
+			if (cobj->readBuffer(p, len)){//è¯»å–å­—ç¬¦ä¸²
 				std::string temp(p, len);
 				str = std::move(temp);
 			}
@@ -847,13 +847,13 @@ bool JS_Native_readStringWithUtf8(JSContext *cx, unsigned int argc, jsval *vp){
 	if (argc == 0)
 	{
 		unsigned short c = 0;
-		cobj->readString(c, nullptr);//¶ÁÈ¡×Ö·û´®³¤¶È
+		cobj->readString(c, nullptr);//è¯»å–å­—ç¬¦ä¸²é•¿åº¦
 
 		char* p = new char[c];
 		if (p){
-			std::unique_ptr<char> pAuto(p);//×Ô¶¯Ö¸Õë
+			std::unique_ptr<char> pAuto(p);//è‡ªåŠ¨æŒ‡é’ˆ
 			std::string str;
-			if (cobj->readString(c, p)){//¶ÁÈ¡×Ö·û´®
+			if (cobj->readString(c, p)){//è¯»å–å­—ç¬¦ä¸²
 				std::string temp(p, c);
 				str = std::move(temp);
 			}
@@ -926,7 +926,7 @@ bool JS_Native_skipBuffer(JSContext *cx, unsigned int argc, jsval *vp){
 	return false;
 }
 
-//×Ô¶¯ÊÍ·Å¶ÔÏó
+//è‡ªåŠ¨é‡Šæ”¾å¯¹è±¡
 bool JS_Native_create(JSContext *cx, unsigned int argc, jsval *vp)
 {
 	JS::CallArgs args = JS::CallArgsFromVp(argc, vp);

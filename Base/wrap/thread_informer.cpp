@@ -1,11 +1,11 @@
-﻿#include "config.h"
+#include "config.h"
 #include "thread_informer.h"
 #include "ext/event.h"
 #include <assert.h>
 #include <memory>
 #include <memory.h>
 
-#ifndef WIN32
+#if CFG_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include <tr1/memory>
 #endif
 
@@ -99,10 +99,10 @@ namespace Wrap{
 		MSGINFO _msg = { 0 };
 		while (mMsgCenter->getMessage(_msg) == 0)
 		{
-#ifdef WIN32
-			std::shared_ptr<void> g(_msg.v);
+#if CFG_TARGET_PLATFORM != CC_PLATFORM_ANDROID
+			std::shared_ptr<char> g((char*)_msg.v);
 #else
-			std::tr1::shared_ptr<void> lock(_msg.v);
+			std::tr1::shared_ptr<char> lock((char*)_msg.v);
 #endif // WIN32
 			if (_msg.cmd > MSG_SEND_DATA){
 				dealCustomMsg(&_msg);

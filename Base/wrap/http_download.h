@@ -1,4 +1,4 @@
-﻿/*
+/*
  * HttpDownload.h
  *
  *  Created on: 2014-5-21
@@ -11,6 +11,7 @@
 #include "client_socket.h"
 #include "timer.h"
 #include "http_downtype.h"
+#include <string>
 
 #ifndef COCOS_PROJECT
 #include "../zlib/zlib.h"
