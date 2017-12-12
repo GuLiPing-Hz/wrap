@@ -52,6 +52,8 @@ namespace Wrap{
 
 		static bool IsFileExits(const char* filename);
 
+		static bool RenameFile(const char* dst, const char* src){ MoveFileG(dst, src); }
+
 		static void MoveFileG(const char* dst, const char* src);
 
 		static void RemoveFile(const char* dst);
