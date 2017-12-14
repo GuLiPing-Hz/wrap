@@ -117,47 +117,36 @@ cls& operator=(const cls&) = delete
 #define MIN(a,b) (((a)>(b))?(b):(a))
 #endif//MIN
 
+void SetLogToFile(const char* path);
+void Printf(const char* type, const char* format, ...);
 
-#if defined _WIN32
-void Printf(const char* format, ...);
+//windows or ios
+#if defined(_WIN32) || (defined(__APPLE__) && !defined(ANDROID))
 
 // VERBOSE
-#define LOGV(...) Printf(__VA_ARGS__)
+#define LOGV(...) Printf("VERBO",__VA_ARGS__)
 // DEBUG
-#define LOGD(...) Printf(__VA_ARGS__)
+#define LOGD(...) Printf("DEBUG",__VA_ARGS__)
 // INFO
-#define LOGI(...) Printf(__VA_ARGS__)
+#define LOGI(...) Printf("INFO",__VA_ARGS__)
 //WARN
-#define LOGW(...) Printf(__VA_ARGS__)
+#define LOGW(...) Printf("WARN",__VA_ARGS__)
 // ERROR
-#define LOGE(...) Printf(__VA_ARGS__)
-
-#elif defined(__APPLE__) && !defined(ANDROID)
-
-//IOS
-// VERBOSE
-#define LOGV(...) printf(__VA_ARGS__)
-// DEBUG
-#define LOGD(...) printf(__VA_ARGS__)
-// INFO
-#define LOGI(...) printf(__VA_ARGS__)
-//WARN
-#define LOGW(...) printf(__VA_ARGS__)
-// ERROR
-#define LOGE(...) printf(__VA_ARGS__)
+#define LOGE(...) Printf("ERRO",__VA_ARGS__)
 
 #else //defined(ANDROID)	//Android
+
 #include <android/log.h>
 // VERBOSE
-#define LOGV(...)   __android_log_print(ANDROID_LOG_VERBOSE, "JniNetUtil", __VA_ARGS__)
+#define LOGV(...)   __android_log_print(ANDROID_LOG_VERBOSE, "Wrap", __VA_ARGS__)
 // DEBUG
-#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG , "JniNetUtil ", __VA_ARGS__)
+#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG , "Wrap ", __VA_ARGS__)
 // INFO
-#define LOGI(...)    __android_log_print(ANDROID_LOG_INFO  , "JniNetUtil ",__VA_ARGS__)
+#define LOGI(...)    __android_log_print(ANDROID_LOG_INFO  , "Wrap ",__VA_ARGS__)
 //WARN
-#define LOGW(...)  __android_log_print(ANDROID_LOG_WARN  , "JniNetUtil ", __VA_ARGS__)
+#define LOGW(...)  __android_log_print(ANDROID_LOG_WARN  , "Wrap ", __VA_ARGS__)
 // ERROR
-#define LOGE(...)   __android_log_print(ANDROID_LOG_ERROR  , "JniNetUtil ",__VA_ARGS__)
+#define LOGE(...)   __android_log_print(ANDROID_LOG_ERROR  , "Wrap ",__VA_ARGS__)
 
 #define LOGGLP(...)  __android_log_print(ANDROID_LOG_INFO  , " GLP ",__VA_ARGS__)
 

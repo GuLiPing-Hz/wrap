@@ -5,26 +5,59 @@
 
 Wrap::PoolMgr* Wrap::PoolMgr::sIns = NULL;
 
-#ifdef WIN32
-
-#include <stdio.h>
-#include <stdarg.h>
+#ifdef _WIN32
 #include <windows.h>
-
-void Printf(const char* format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	char buf[256];
-	vsprintf(buf, format, args);
-	OutputDebugStringA(buf);
-	va_end(args);
-}
-
 #else
 // For nanosleep()
 #include <time.h>
 #endif
+
+#include <stdio.h>
+#include <stdarg.h>
+#include <sstream>
+
+static std::string sPath;
+
+void SetLogToFile(const char* path)
+{
+	sPath = path;
+}
+
+void Printf(const char* type, const char* format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	char buf[1024];
+	vsprintf(buf, format, args);
+	std::stringstream os;
+	os << "[" << type << "] : " << buf << std::endl;
+
+	bool writed = false;
+	if (!sPath.empty()){//是否已经指定写入文件
+		FILE* fp = fopen(sPath.c_str(), "wb");
+		if (fp != NULL){
+			SYSTEMTIME st;
+			GetLocalTime(&st);
+			static char timeBuf[260];
+			sprintf(timeBuf, "%04d-%02d-%02d,%02d:%02d:%02d.%03d", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+
+			fprintf(fp, "[%s]%s", timeBuf,os.str().c_str());
+			fflush(fp);
+			fclose(fp);
+			writed = true;
+		}
+	}
+
+	if (!writed){
+#ifdef _WIN32
+		OutputDebugStringA(os.str().c_str());
+#else
+		printf(os.str().c_str());
+#endif // _WIN32
+	}
+
+	va_end(args);
+}
 
 bool doendian(int c)
 {	// 0x12345678
