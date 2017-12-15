@@ -9,6 +9,7 @@
 #include "http_download_mgr.h"
 #include "httpcontent.h"
 #include <algorithm>
+#include "pool.h"
 
 #ifdef WIN32
 #define R_OK  4  /* Read */
@@ -136,8 +137,8 @@ CHttpDownload::CHttpDownload(Reactor *pReactor,CHttpDownloadMgr* pMgr)
 	m_nRequestHeaderSize = 4096;
 	m_nResponseHeaderSize =4096;
 
-	m_sRequestHeader = new char[m_nRequestHeaderSize];
-	m_sResponseHeader = new char[m_nResponseHeaderSize];
+	m_sRequestHeader = (char*)calloc_(m_nRequestHeaderSize);// new char[m_nRequestHeaderSize];
+	m_sResponseHeader = (char*)calloc_(m_nResponseHeaderSize);//new char[m_nResponseHeaderSize];
 
 	memset(&z,0,sizeof(z));
 	memset( m_sRequestHeader, 0,  m_nRequestHeaderSize);
@@ -147,16 +148,12 @@ CHttpDownload::CHttpDownload(Reactor *pReactor,CHttpDownloadMgr* pMgr)
 
 CHttpDownload::~CHttpDownload() {
 	uninitDownload();
-	if(m_sResponseHeader)
-	{
-		delete m_sResponseHeader;
-		m_sResponseHeader = NULL;
-	}
-	if(m_sRequestHeader)
-	{
-		delete m_sRequestHeader;
-		m_sRequestHeader = NULL;
-	}
+
+	free_(m_sResponseHeader);
+	m_sResponseHeader = NULL;
+
+	free_(m_sRequestHeader);
+	m_sRequestHeader = NULL;
 }
 
 bool isAlpha(char c)
@@ -612,9 +609,9 @@ int CHttpDownload::getResponseHeader(DataBlock* pDb/*char* buf*/)
 			if ( m_nResponseHeaderSize > (PER_RECV_BUF_SIZE+1) ) {
 				return 0;
 			}
-			char * pTemp = new char[m_nResponseHeaderSize];
-			memset( pTemp, 0, m_nResponseHeaderSize );
-			delete m_sResponseHeader;
+			char * pTemp = (char*)calloc_(m_nResponseHeaderSize);
+			memset(pTemp, 0, m_nResponseHeaderSize);
+			free_(m_sResponseHeader);
 			m_sResponseHeader = pTemp;
 		}
 
@@ -849,22 +846,22 @@ CHttpDownload::eDownloadType CHttpDownload::onDownloadSaveData(const char* pData
 
 		if(m_eContentEncoding == CE_Deflate)
 		{
-			unsigned char* pHttpBuf = new unsigned char[nLenData];
+			unsigned char* pHttpBuf = (unsigned char*)calloc_(nLenData);// new unsigned char[nLenData];
 			if(pHttpBuf)
 			{
 				memcpy(pHttpBuf,pData,nLenData);
 				Http_unencode_deflate_write(this,pHttpBuf,nLenData);
-				delete []pHttpBuf;
+				free_(pHttpBuf);
 			}
 		}
 		else if(m_eContentEncoding == CE_Gzip)
 		{
-			unsigned char* pHttpBuf = new unsigned char[nLenData];
+			unsigned char* pHttpBuf = (unsigned char*)calloc_(nLenData);
 			if(pHttpBuf)
 			{
 				memcpy(pHttpBuf,pData,nLenData);
 				Http_unencode_gzip_write(this,pHttpBuf,nLenData);
-				delete []pHttpBuf;
+				free_(pHttpBuf);
 			}
 		}
 		else

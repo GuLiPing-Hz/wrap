@@ -33,6 +33,34 @@ void SetLogToFile(const char* path)
 	sPath = path;
 }
 
+void PrintConsole(const char* log)
+{
+	//如果上面没有成功打印日志，那么我们直接输出到屏幕上
+#ifdef _WIN32
+	OutputDebugStringA(log);
+#elif defined(ANDROID)
+	switch (level){
+	case 0:
+		__android_log_print(ANDROID_LOG_VERBOSE, "Wrap", log);
+		break;
+	case 1:
+		__android_log_print(ANDROID_LOG_DEBUG, "Wrap ", log);
+		break;
+	case 2:
+		__android_log_print(ANDROID_LOG_INFO, "Wrap ", log);
+		break;
+	case 3:
+		__android_log_print(ANDROID_LOG_WARN, "Wrap ", log);
+		break;
+	case 4:
+		__android_log_print(ANDROID_LOG_ERROR, "Wrap ", log);
+		break;
+	}
+#else// ios or other
+	printf(log);
+#endif // _WIN32
+}
+
 void Printf(int level, const char* file, long line, const char* format, ...)
 {
 	if (level < sLevel || level > 4)
@@ -45,7 +73,7 @@ void Printf(int level, const char* file, long line, const char* format, ...)
 	va_end(args);
 
 	std::stringstream os;
-	os << "[" << gLogStr[level] << "]" << file << "_" << line << " : " << buf << std::endl;
+	os << "[" << gLogStr[level] << "]" << file << "_" << line << " : " << buf;//std::endl;
 
 	if (!sPath.empty()){//是否已经指定写入文件
 		static char timeBuf[260];
@@ -60,38 +88,14 @@ void Printf(int level, const char* file, long line, const char* format, ...)
 			sprintf(timeBuf, "%04d-%02d-%02d,%02d:%02d:%02d %lld", (1900 + p->tm_year), (1 + p->tm_mon), p->tm_mday
 				, (p->tm_hour + 8), p->tm_min, p->tm_sec, timep);
 
-			fprintf(fp, "[%s]%s", timeBuf,os.str().c_str());
+			fprintf(fp, "[%s]%s", timeBuf, os.str().c_str());
 			fflush(fp);
 			fclose(fp);
 			return;
 		}
 	}
 
-	//如果上面没有成功打印日志，那么我们直接输出到屏幕上
-#ifdef _WIN32
-	OutputDebugStringA(os.str().c_str());
-#elif defined(ANDROID)
-	switch(level){
-	case 0:
-		__android_log_print(ANDROID_LOG_VERBOSE, "Wrap", os.str().c_str());
-		break;
-	case 1:
-		__android_log_print(ANDROID_LOG_DEBUG , "Wrap ", os.str().c_str());
-		break;
-	case 2:
-		__android_log_print(ANDROID_LOG_INFO  , "Wrap ",os.str().c_str());
-		break;
-	case 3:
-		__android_log_print(ANDROID_LOG_WARN  , "Wrap ", os.str().c_str());
-		break;
-	case 4:
-		__android_log_print(ANDROID_LOG_ERROR, "Wrap ", os.str().c_str());
-		break;
-	}
-#else// ios or other
-	printf(os.str().c_str());
-#endif // _WIN32
-	
+	PrintConsole(os.str().c_str());
 }
 
 bool doendian(int c)
@@ -144,6 +148,19 @@ size_t StrLCpy(char *dst, const char *src, size_t siz)
 	return (s - src - 1);	/* count does not include NUL */
 }
 
+void LogCiphertext(const unsigned char* ciphertext, size_t len)
+{
+	std::stringstream ss;
+	int pos = 0;
+	while (pos < len){
+		char buf[10] = { 0 };
+		sprintf(buf, "%x-", ciphertext[pos] & 0xff);
+		ss << buf;
+		pos++;
+	}
+	PrintConsole(ss.str().c_str());
+}
+
 const char* ByteString(const char *msg, const unsigned int len)
 {
 	if (len > 30000)
@@ -171,7 +188,8 @@ void SleepMs(int msecs) {
 
 
 std::string XorString(const char *data, int datalen, const char *key, int len) {
-	char *pBuf = new char[datalen];
+	char *pBuf = (char*)calloc_(datalen);
+	Wrap::VoidGuard guard(pBuf);
 	if (!pBuf)
 		return "oom";
 
@@ -180,7 +198,6 @@ std::string XorString(const char *data, int datalen, const char *key, int len) {
 	}
 
 	std::string ret(pBuf, datalen);
-	delete[] pBuf;
 	return ret;
 }
 

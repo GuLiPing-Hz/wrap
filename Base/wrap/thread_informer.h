@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include "allocator.h"
 
 namespace Wrap{
 
@@ -94,7 +95,8 @@ namespace Wrap{
 			if (m_requestlist.size() > 1000)//请求队列最多1000
 				return -1;
 
-			char* data = new char[len];
+			//char* data = new char[len];
+			char* data = (char*)calloc_(len);
 			if (!data)
 				return -1;
 			memcpy(data, v, len);//拷贝数据

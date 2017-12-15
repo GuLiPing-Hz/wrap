@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <list>
-#include "config.h"
+#include "allocator.h"
 
 namespace Wrap{
 	class PoolMgr;
@@ -68,13 +68,15 @@ namespace Wrap{
 	public:
 		static PoolMgr* GetIns(){
 			if (sIns == nullptr){
-				sIns = new PoolMgr();
+				//sIns = new PoolMgr();
+				new_(PoolMgr, sIns);
 			}
 			return sIns;
 		}
 		static void ReleaseIns(){
-			if (sIns)
-				delete sIns;
+// 			if (sIns)
+// 				delete sIns;
+			delete_(PoolMgr, sIns);
 		}
 
 		template<class T>
@@ -90,7 +92,9 @@ namespace Wrap{
 				}
 			}
 
-			return new T();
+			//return new T();
+			new_(T, ret);
+			return ret;
 		}
 		void addToPool(PoolObj* obj){
 			if (obj){
@@ -123,22 +127,10 @@ namespace Wrap{
 	{
 	public:
 		VoidGuard(void *p) : m_p(p){}
-		virtual ~VoidGuard(){ if (m_p)free(m_p); }
+		virtual ~VoidGuard(){ free_(m_p); }
 	private:
 		void *m_p;
 	};
-
-
-	//使用std::shared_ptr
-//     template<class Cls>
-//     class SafePointer
-//     {
-//     public:
-//         SafePointer(Cls* p) :mPointer(p){}
-//         ~SafePointer(){ if (mPointer)delete mPointer; }
-//     private:
-//         Cls* mPointer;
-//     };
 }
 
 #endif // POOL_H__

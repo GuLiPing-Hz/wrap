@@ -25,14 +25,15 @@ void doswap(bool swap, void *p, size_t n);
 */
 size_t StrLCpy(char *dst, const char *src, size_t siz);
 
-const char* ByteString(const char *msg, const unsigned int len);
+//打印密文，通过16进制的方式打印
+void LogCiphertext(const unsigned char* ciphertext, size_t len);
 
+const char* ByteString(const char *msg, const unsigned int len);
 
 // This function sleeps for the specified number of milliseconds.
 // It may return early if the thread is woken by some other event,
 // such as the delivery of a signal on Unix.
 void SleepMs(int msecs);
-
 
 //异或简单加密算
 std::string XorString(const char *data, int datalen, const char *key, int len);

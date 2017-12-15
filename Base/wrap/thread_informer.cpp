@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <memory>
 #include <memory.h>
+#include "pool.h"
 
 #if CFG_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include <tr1/memory>
@@ -117,7 +118,8 @@ namespace Wrap{
 					if (!mem)
 						return;
 
-					ReserveData *pRD = new(mem)ReserveData(mMsgCenter);
+					//ReserveData *pRD = new(mem)ReserveData(mMsgCenter);
+					new_(ReserveData, pRD, mMsgCenter);
 					pRD->setTimeout(success ? ReserveData::TYPE_TIMEOUT : ReserveData::TYPE_REQFAILED);
 					pRD->serverid = _msg.server;
 					pRD->seq = _msg.wseq;

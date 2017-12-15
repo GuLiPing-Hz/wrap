@@ -20,8 +20,11 @@ CHttpDownloadMgr::CHttpDownloadMgr()
 :mThread(NULL)
 {
 	// TODO Auto-generated constructor stub
-	for(int i=0;i<MAX_DOWNLOAD;i++)
-		mArraHttpDownload[i] = new CHttpDownload(&mReactor,this);
+	for (int i = 0; i < MAX_DOWNLOAD; i++){
+		new_(CHttpDownload, p, &mReactor, this);// new CHttpDownload(&mReactor, this);
+		mArraHttpDownload[i] = p;
+	}
+		
 
 	mThread = ThreadWrapper::CreateThread(&CHttpDownloadMgr::HttpDownload,(void*)this,kLowPriority,"Http download");
 }

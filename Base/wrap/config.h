@@ -126,6 +126,7 @@ void SetLogLevel(int level);//设置打印等级 默认LOG_LEVEL_ALL
 void SetLogToFile(const char* path);
 //打印日志
 void Printf(int level, const char* file, long line, const char* format, ...);
+void PrintConsole(const char* log);
 
 //windows or ios
 #if defined(_WIN32) || (defined(__APPLE__) && !defined(ANDROID))

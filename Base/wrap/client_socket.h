@@ -88,6 +88,24 @@ namespace Wrap
 
 	//////////////////////////////////////////////////////////////////////////
 
+	class ClientSocketBase;
+
+	class OnSocketListener{
+	public:
+		// 连接成功
+		virtual bool onSocketConnect(ClientSocketBase* client) = 0;
+		// 连接超时
+		virtual void onSocketConnectTimeout(ClientSocketBase* client) = 0;
+		// 正常关闭(被动关闭),recv == 0的情况
+		virtual void onSocketClose(ClientSocketBase* client) = 0;
+		// errcode为错误码(socket提供)
+		virtual void onSocketConnectError(ClientSocketBase* client, int errCode) = 0;
+		virtual void onSocketRecvError(ClientSocketBase* client, int errCode) = 0;
+		virtual void onSocketSendError(ClientSocketBase* client, int errCode) = 0;
+		// 网络层错误(errCode网络层定义)
+		virtual void onNetLevelError(ClientSocketBase* client, int errCode) = 0;
+	};
+
 	class ClientSocketBase : public FDEventHandler
 	{
 	public:
@@ -109,6 +127,8 @@ namespace Wrap
 		virtual int addBuf(const char* buf,unsigned int buflen);
 		char* getPeerIp();
 
+		void setSocketListener(OnSocketListener* listener){ m_pListener = listener; }
+
 		static const char* GetIpFromHost(const char* host, bool is_ipv6 = false);
 		//从域名中解析出Ip地址,只返回第一个解析出来的,字符串保存在静态空间中，返回值不需要释放！
 		static const char* GetIpv4FromHostName(const char* name);
@@ -116,23 +136,25 @@ namespace Wrap
 		void open(){mIsClosed = false;}
 	public:
 		// 连接成功
-		virtual bool onSocketConnect() = 0; 
+		virtual bool onSocketConnect() { if (m_pListener)return m_pListener->onSocketConnect(this); return true; }
 		// 连接超时
-		virtual void onSocketConnectTimeout() = 0;
+		virtual void onSocketConnectTimeout() { if (m_pListener)m_pListener->onSocketConnectTimeout(this); }
 		// 正常关闭(被动关闭),recv == 0的情况
-		virtual void onSocketClose() = 0;
+		virtual void onSocketClose() { if (m_pListener)m_pListener->onSocketClose(this); }
 		// errcode为错误码(socket提供)
-		virtual void onSocketConnectError(int errCode) = 0;
-		virtual void onSocketRecvError(int errCode) = 0;
-		virtual void onSocketSendError(int errCode) = 0;
+		virtual void onSocketConnectError(int errCode) { if (m_pListener)m_pListener->onSocketConnectError(this, errCode); }
+		virtual void onSocketRecvError(int errCode) { if (m_pListener)m_pListener->onSocketRecvError(this, errCode); }
+		virtual void onSocketSendError(int errCode) { if (m_pListener)m_pListener->onSocketSendError(this, errCode); }
 		// 网络层错误(errCode网络层定义)
-		virtual void onNetLevelError(int errCode) = 0;
-
+		virtual void onNetLevelError(int errCode) { if (m_pListener)m_pListener->onNetLevelError(this, errCode); }
 	private:
 		DataBlock mRecvdata;
 		DataBlock mSenddata;
 		DataDecoderBase *mDecoder;
 		bool mIsClosed;
+
+		//当子类继承的时候，可以不用这个，它主要为服务器监听客户端socket提供接口
+		OnSocketListener* m_pListener;
     public:
 		Mutex mMutex;
 	};
@@ -156,14 +178,6 @@ namespace Wrap
 
 		inline const char* gethost(){return mHost;}
 		inline short getport(){return mPort;}
-	public:
-		virtual bool onSocketConnect() {return true;} 
-		virtual void onSocketConnectTimeout() {}
-		virtual void onSocketConnectError(int errCode) {}
-		virtual void onSocketClose() {}
-		virtual void onSocketRecvError(int errCode) {}
-		virtual void onSocketSendError(int errCode) {}
-		virtual void onNetLevelError(int errCode) {}
 
 	private:
 		bool mIsConnected;

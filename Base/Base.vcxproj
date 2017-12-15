@@ -98,6 +98,7 @@
     <ClInclude Include="crypto\sha512.h" />
     <ClInclude Include="jni\JniHelper.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="wrap\allocator.h" />
     <ClInclude Include="wrap\client_socket.h" />
     <ClInclude Include="wrap\config.h" />
     <ClInclude Include="wrap\counter.h" />
