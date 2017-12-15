@@ -34,7 +34,6 @@ static void run_benchmark(char *name, void(*benchmark)(void*), void(*setup)(void
 			setup(data);
 		}
 
-
 		timer.start();
 		benchmark(data);
 		timer.stop();
@@ -68,6 +67,9 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	Wrap::Mutex mutex;
 	Wrap::Guard lock(mutex);
+
+	//SetLogToFile("xx");
+	LOGI("xxxx");
 
 	const char* ip = Wrap::ClientSocket::GetIpv4FromHostName("baidu.com");
 	ip = Wrap::ClientSocket::GetIpFromHost("qq.com", false);

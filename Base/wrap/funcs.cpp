@@ -7,56 +7,91 @@ Wrap::PoolMgr* Wrap::PoolMgr::sIns = NULL;
 
 #ifdef _WIN32
 #include <windows.h>
-#else
-// For nanosleep()
-#include <time.h>
+#endif
+
+#ifdef NETUTIL_ANDROID
+#include <android/log.h>
 #endif
 
 #include <stdio.h>
 #include <stdarg.h>
 #include <sstream>
+#include <time.h>
+#include <string.h>
 
 static std::string sPath;
+static int sLevel = 0;
+const char* gLogStr[] = { "VERB", "DEBU", "INFO", "WARN", "ERRO" };
+
+void SetLogLevel(int level)
+{
+	sLevel = level;
+}
 
 void SetLogToFile(const char* path)
 {
 	sPath = path;
 }
 
-void Printf(const char* type, const char* format, ...)
+void Printf(int level, const char* file, long line, const char* format, ...)
 {
+	if (level < sLevel || level > 4)
+		return;
+
 	va_list args;
 	va_start(args, format);
 	char buf[1024];
 	vsprintf(buf, format, args);
-	std::stringstream os;
-	os << "[" << type << "] : " << buf << std::endl;
+	va_end(args);
 
-	bool writed = false;
+	std::stringstream os;
+	os << "[" << gLogStr[level] << "]" << file << "_" << line << " : " << buf << std::endl;
+
 	if (!sPath.empty()){//是否已经指定写入文件
-		FILE* fp = fopen(sPath.c_str(), "wb");
+		static char timeBuf[260];
+		time_t timep;
+		struct tm *p;
+		time(&timep);
+		p = gmtime(&timep); /* 获取当前时间 */
+		sprintf(timeBuf, "%s_%02d-%02d.log", sPath.c_str(), (1 + p->tm_mon), p->tm_mday);
+
+		FILE* fp = fopen(timeBuf, "ab");
 		if (fp != NULL){
-			SYSTEMTIME st;
-			GetLocalTime(&st);
-			static char timeBuf[260];
-			sprintf(timeBuf, "%04d-%02d-%02d,%02d:%02d:%02d.%03d", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+			sprintf(timeBuf, "%04d-%02d-%02d,%02d:%02d:%02d %lld", (1900 + p->tm_year), (1 + p->tm_mon), p->tm_mday
+				, (p->tm_hour + 8), p->tm_min, p->tm_sec, timep);
 
 			fprintf(fp, "[%s]%s", timeBuf,os.str().c_str());
 			fflush(fp);
 			fclose(fp);
-			writed = true;
+			return;
 		}
 	}
 
-	if (!writed){
+	//如果上面没有成功打印日志，那么我们直接输出到屏幕上
 #ifdef _WIN32
-		OutputDebugStringA(os.str().c_str());
-#else
-		printf(os.str().c_str());
-#endif // _WIN32
+	OutputDebugStringA(os.str().c_str());
+#elif defined(ANDROID)
+	switch(level){
+	case 0:
+		__android_log_print(ANDROID_LOG_VERBOSE, "Wrap", os.str().c_str());
+		break;
+	case 1:
+		__android_log_print(ANDROID_LOG_DEBUG , "Wrap ", os.str().c_str());
+		break;
+	case 2:
+		__android_log_print(ANDROID_LOG_INFO  , "Wrap ",os.str().c_str());
+		break;
+	case 3:
+		__android_log_print(ANDROID_LOG_WARN  , "Wrap ", os.str().c_str());
+		break;
+	case 4:
+		__android_log_print(ANDROID_LOG_ERROR, "Wrap ", os.str().c_str());
+		break;
 	}
-
-	va_end(args);
+#else// ios or other
+	printf(os.str().c_str());
+#endif // _WIN32
+	
 }
 
 bool doendian(int c)
@@ -82,6 +117,31 @@ void doswap(bool swap, void *p, size_t n)
 			char t = a[i]; a[i] = a[j]; a[j] = t;
 		}
 	}
+}
+
+size_t StrLCpy(char *dst, const char *src, size_t siz)
+{
+	register char *d = dst;//register把变量放到cpu寄存器中，提高访问速度
+	register const char *s = src;
+	register size_t n = siz;
+
+	/* Copy as many bytes as will fit */
+	if (n != 0 && --n != 0) {
+		do {
+			if ((*d++ = *s++) == 0)
+				break;
+		} while (--n != 0);
+	}
+
+	/* Not enough room in dst, add NUL and traverse rest of src */
+	if (n == 0) {
+		if (siz != 0)
+			*d = '\0';		/* NUL-terminate dst */
+		while (*s++)
+			;
+	}
+
+	return (s - src - 1);	/* count does not include NUL */
 }
 
 const char* ByteString(const char *msg, const unsigned int len)

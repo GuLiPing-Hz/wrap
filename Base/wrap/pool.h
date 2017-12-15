@@ -1,4 +1,4 @@
-#ifndef POOL_H__
+﻿#ifndef POOL_H__
 #define POOL_H__
 
 #include <assert.h>

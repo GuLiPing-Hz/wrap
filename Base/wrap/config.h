@@ -117,22 +117,29 @@ cls& operator=(const cls&) = delete
 #define MIN(a,b) (((a)>(b))?(b):(a))
 #endif//MIN
 
+#define LOG_LEVEL_ALL 0
+#define LOG_LEVEL_WE 4
+#define LOG_LEVEL_ERR 5
+void SetLogLevel(int level);//设置打印等级 默认LOG_LEVEL_ALL
+
+//无需后缀的完整路径名，后缀内置添加
 void SetLogToFile(const char* path);
-void Printf(const char* type, const char* format, ...);
+//打印日志
+void Printf(int level, const char* file, long line, const char* format, ...);
 
 //windows or ios
 #if defined(_WIN32) || (defined(__APPLE__) && !defined(ANDROID))
 
 // VERBOSE
-#define LOGV(...) Printf("VERBO",__VA_ARGS__)
+#define LOGV(...) Printf(0,__FILE__,__LINE__,__VA_ARGS__)
 // DEBUG
-#define LOGD(...) Printf("DEBUG",__VA_ARGS__)
+#define LOGD(...) Printf(1,__FILE__,__LINE__,__VA_ARGS__)
 // INFO
-#define LOGI(...) Printf("INFO",__VA_ARGS__)
+#define LOGI(...) Printf(2,__FILE__,__LINE__,__VA_ARGS__)
 //WARN
-#define LOGW(...) Printf("WARN",__VA_ARGS__)
+#define LOGW(...) Printf(3,__FILE__,__LINE__,__VA_ARGS__)
 // ERROR
-#define LOGE(...) Printf("ERRO",__VA_ARGS__)
+#define LOGE(...) Printf(4,__FILE__,__LINE__,__VA_ARGS__)
 
 #else //defined(ANDROID)	//Android
 

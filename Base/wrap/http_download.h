@@ -1,4 +1,4 @@
-/*
+﻿/*
  * HttpDownload.h
  *
  *  Created on: 2014-5-21
