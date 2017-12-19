@@ -30,7 +30,7 @@ public:
 	// either immediately or some time in the future.
 	virtual bool Set() = 0;
 
-	// Prevents future Wait() calls from finishing without a new Set() call.
+	// Prevents future Wait() calls from finishing without a new1 Set() call.
 	virtual bool Reset() = 0;
 
 	// Puts the calling thread into a wait state. The thread may be released

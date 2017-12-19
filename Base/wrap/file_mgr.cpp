@@ -1,6 +1,7 @@
 ﻿#include "file_mgr.h"
 #include <string.h>
 #include <stdio.h>
+#include "pool.h"
 
 #ifdef WIN32
 #define R_OK  4  /* Read */
@@ -43,7 +44,7 @@ namespace Wrap{
 			return false;
 
 		int size_buf = WRITEBUFFERSIZE;
-		void* buf = (void*)new char[size_buf];
+		void* buf = wrap_calloc(size_buf);
 		if (!buf)
 			return false;
 
@@ -138,9 +139,7 @@ namespace Wrap{
 
 		} while (unzGoToNextFile(zfile) == UNZ_OK);
 
-
-		if (buf)
-			delete (char*)buf;
+		wrap_free(buf);
 
 		unzClose(zfile);
 		return !numError;
@@ -148,8 +147,8 @@ namespace Wrap{
 
 	/* changeFileDate : change the date/time of a file
 		filename : the filename of the file where date/time must be modified
-		dosdate : the new date at the MSDos format (4 bytes)
-		tmu_date : the SAME new date at the tm_unz format */
+		dosdate : the new1 date at the MSDos format (4 bytes)
+		tmu_date : the new1 SAME date at the tm_unz format */
 	void CFileMgr::ChangeFileDate(const char *filename, unsigned long dosdate, tm_unz tmu_date)
 	{
 #ifdef WIN32

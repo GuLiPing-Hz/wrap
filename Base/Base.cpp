@@ -58,6 +58,17 @@ static void run_benchmark(char *name, void(*benchmark)(void*), void(*setup)(void
 	printf("ns\n");
 }
 
+
+class PoolObj2 : public Wrap::PoolObj{
+public:
+	PoolObj2(){
+		LOGI("PoolObj2");
+	}
+	virtual ~PoolObj2(){
+		LOGI("~PoolObj2");
+	}
+};
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	WORD wVersion;
@@ -69,14 +80,43 @@ int _tmain(int argc, _TCHAR* argv[])
 	Wrap::Guard lock(mutex);
 
 	//SetLogToFile("xx");
-	LOGI("xxxx");
+	LOGI("xxxx\n");
 
+
+// 	void* M_temp = NULL;
+// 	PoolObj2* pool = (M_temp = Wrap::Allocator::GetInstance()->alloc(sizeof(PoolObj2), __FILE__, __LINE__)) == NULL ? NULL : new (M_temp)PoolObj2();
+
+	//测试父类指针使用new_和delete_
+	wrap_new_begin;
+	Wrap::PoolObj* pool = wrap_new(PoolObj2);
+	
+// 	if (pool != NULL){
+// 		pool->~PoolObj();
+// 		Wrap::Allocator::GetInstance()->dealloc(pool);
+// 		pool = NULL;
+// 	}
+	wrap_delete(PoolObj, pool);
+	
+	void* p = wrap_calloc(sizeof(short) * 10);
+	wrap_free(p);
+
+	{
+		LOGI("++++++++ 测试自动内存释放是否能成功\n");
+		Wrap::VoidGuard guard(wrap_calloc(sizeof(float) * 10));
+		Wrap::ClsGuard<PoolObj2> guard2(wrap_new(PoolObj2));
+		LOGI("~~~~~~~\n");
+	}
+
+	std::shared_ptr<Wrap::PoolObj> p2(new Wrap::PoolObj());//官方标准智能指针，在linux下忽略，是另一种写法
+
+
+	/*
+	根据域名获取ipv4地址
+	*/
 	const char* ip = Wrap::ClientSocket::GetIpv4FromHostName("baidu.com");
 	ip = Wrap::ClientSocket::GetIpFromHost("qq.com", false);
 
 	WSACleanup();
-
-	std::shared_ptr<Wrap::PoolObj> p(new Wrap::PoolObj());
 
 	return 0;
 }

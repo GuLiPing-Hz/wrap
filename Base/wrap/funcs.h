@@ -18,6 +18,18 @@ bool doendian(int c);
 
 void doswap(bool swap, void *p, size_t n);
 
+/* From Libevent begin https://github.com/nmathewson/Libevent */
+unsigned int
+evutil_weakrand_seed_(unsigned int *state, unsigned int seed);
+
+int
+evutil_weakrand_(unsigned int *state);
+
+int
+evutil_weakrand_range_(unsigned int *state, int top);
+/* From Libevent end*/
+
+
 /*
 * Copy src to string dst of size siz.  At most siz-1 characters
 * will be copied.  Always NUL terminates (unless siz == 0).
@@ -37,5 +49,7 @@ void SleepMs(int msecs);
 
 //“ÏªÚºÚµ•º”√‹À„
 std::string XorString(const char *data, int datalen, const char *key, int len);
+
+
 
 #endif//FUNCS_H___

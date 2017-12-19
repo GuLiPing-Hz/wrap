@@ -1,4 +1,5 @@
 ﻿#include "thread.h"
+#include "../pool.h"
 
 #include <assert.h>
 #ifdef WIN32
@@ -278,13 +279,15 @@ extern "C"
 ThreadWrapper* ThreadPosix::Create(ThreadRunFunction func, ThreadObj obj,
 	eThreadPriority prio,
 	const char* thread_name) {
-	ThreadPosix* ptr = new ThreadPosix(func, obj, prio, thread_name);
+	wrap_new_begin;
+	ThreadPosix* ptr = wrap_new(ThreadPosix,func, obj, prio, thread_name);//new ThreadPosix(func, obj, prio, thread_name);
 	if (!ptr) {
 		return NULL;
 	}
 	const int error = ptr->Construct();
 	if (error) {
-		delete ptr;
+		//delete ptr;
+		wrap_delete(ThreadPosix,ptr);
 		return NULL;
 	}
 	return ptr;
@@ -344,7 +347,8 @@ int ThreadPosix::Construct() {
 
 ThreadPosix::~ThreadPosix() {
 	pthread_attr_destroy(&attr_);
-	delete event_;
+	//delete event_;
+	wrap_delete(EventWrapper,event_);
 }
 
 //#define HAS_THREAD_ID !defined(NETUTIL_IOS) && !defined(NETUTIL_MAC)
@@ -564,7 +568,9 @@ ThreadWrapper* ThreadWrapper::CreateThread(ThreadRunFunction func,
 	const char* thread_name)
 {
 #if defined(_WIN32)
-	return new ThreadWindows(func, obj, prio, thread_name);
+	//return new1 ThreadWindows(func, obj, prio, thread_name);
+	wrap_new_begin;
+	return wrap_new(ThreadWindows, func, obj, prio, thread_name);
 #else
 	return ThreadPosix::Create(func, obj, prio, thread_name);
 #endif

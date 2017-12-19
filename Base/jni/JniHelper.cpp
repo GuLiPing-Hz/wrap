@@ -76,9 +76,8 @@ namespace Wrap {
     std::string JniHelper::getStringUTFCharsJNI(JNIEnv *env, jstring srcjStr, bool *ret) {
         std::string utf8Str;
         if (srcjStr != nullptr) {
-            //("%s : env = %x\n", __FUNCTION__, env);
             const char *str = env->GetStringUTFChars(srcjStr, 0);
-            //LOGD("%s : str = %s\n", __FUNCTION__, str);
+            //LOGD("%s : str = %s", __FUNCTION__, str);
             if (ret)
                 *ret = true;
             std::string temp = str;
@@ -318,7 +317,7 @@ namespace Wrap {
     }
 
     jstring JniHelper::convert(JniMethodInfo &t, const char *x) {
-        //LOGD("%s : x = %s\n", __FUNCTION__, x);
+        //LOGD("%s : x = %s", __FUNCTION__, x);
         jstring ret = newStringUTFJNI(t.env, x ? x : "");
         localRefs[t.env].push_back(ret);
         return ret;

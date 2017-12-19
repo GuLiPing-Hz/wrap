@@ -183,6 +183,7 @@ namespace Wrap
             {
 				Guard lock(mMutex);
                 
+				//复制fd_set
                 readset = mReadSet;
                 writeset = mWriteSet;
                 tmpFDMap = mSet.mFdEHMap;
@@ -219,9 +220,9 @@ namespace Wrap
 			if(nfds == SOCKET_ERROR)
 			{
 #ifdef _WIN32 
-				LOGE("%s : select error :  %d\n",__FUNCTION__,WSAGetLastError());
+				LOGE("%s : select error :  %d",__FUNCTION__,WSAGetLastError());
 #else
-				LOGE("%s : select error : %d\n",__FUNCTION__,errno);
+				LOGE("%s : select error : %d",__FUNCTION__,errno);
 #endif
 			}
 

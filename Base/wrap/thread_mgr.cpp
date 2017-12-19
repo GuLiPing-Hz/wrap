@@ -2,6 +2,7 @@
 #include "ext/event.h"
 #include "mutex.h"
 #include "funcs.h"
+#include "pool.h"
 
 namespace Wrap{
 
@@ -15,10 +16,12 @@ ThreadMgr::ThreadMgr(void)
 
 ThreadMgr::~ThreadMgr(void)
 {
-	if(mThread)
-		delete mThread;
-	if(mEvent)
-		delete mEvent;
+// 	if(mThread)
+// 		delete mThread;
+// 	if(mEvent)
+// 		delete mEvent;
+	wrap_delete(ThreadWrapper, mThread);
+	wrap_delete(EventWrapper, mEvent);
 }
 
 bool ThreadMgr::createThread(const char* name, eThreadPriority iPriority)
@@ -44,8 +47,9 @@ bool ThreadMgr::releaseThread()
 	mIsStop = true;
 	if (mThread){
 		mThread->Stop();
-		delete mThread;
-		mThread = nullptr;
+// 		delete mThread;
+// 		mThread = nullptr;
+		wrap_delete(ThreadWrapper, mThread);
 	}
 	return true;
 }

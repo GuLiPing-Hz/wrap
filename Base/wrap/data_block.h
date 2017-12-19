@@ -20,6 +20,7 @@ namespace Wrap {
 
 	class DataBlockBase{
 	public:
+		DataBlockBase() :m_pos(0), m_size(0){}
 		virtual ~DataBlockBase(){}
 
 		/**
@@ -71,17 +72,14 @@ namespace Wrap {
 			}
 
 			m_size = size;
-			//m_buf = new char[m_size];
-			m_buf = (char*)calloc_(m_size);
+			m_buf = (char*)wrap_calloc(m_size);
 			//memset(m_buf, 0, m_size);//先置为空
 		}
 
 		virtual ~DataBlock() {
 			//            LOGD("%s", __FUNCTION__);
 			if (m_buf) {
-				//delete[]  m_buf;
-				free_(m_buf);
-				m_buf = nullptr;
+				wrap_free(m_buf);
 			}
 		}
 		//拷贝数据到指定位置
@@ -101,8 +99,7 @@ namespace Wrap {
 				while (newSize < tmppos)
 					newSize = newSize << 2;
 
-				//char *tmpbuf = new char[newSize];
-				char *tmpbuf = (char*)calloc_(newSize);
+				char *tmpbuf = (char*)wrap_calloc(newSize);
 				if (!tmpbuf)
 					return -1;
 
@@ -111,8 +108,7 @@ namespace Wrap {
 				if (m_buf) {
 					if (m_pos > 0)
 						memcpy(tmpbuf, m_buf, m_pos);
-					//delete[]m_buf;
-					free_(m_buf);
+					wrap_free(m_buf);
 				}
 
 				memcpy(tmpbuf + pos, buf, buflen);
@@ -129,8 +125,7 @@ namespace Wrap {
 		*/
 		virtual void move(char *&buf, unsigned int buflen) {
 			if (m_buf) {//释放之前的内容
-				//delete m_buf;
-				free(m_buf);
+				wrap_free(m_buf);
 			}
 			m_buf = buf;
 			m_pos = buflen;

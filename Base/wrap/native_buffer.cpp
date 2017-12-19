@@ -6,8 +6,8 @@
 namespace Wrap{
 
 	BufferValue *ReadNativeBufferValue(NativeBuffer *nativeBuf, int type, int &len) {
-		//BufferValue *ret = new BufferValue(); //PoolMgr::GetIns()->getFromPool<BufferValue>("BufferValue");
-		new_(BufferValue, ret);
+		wrap_new_begin;
+		BufferValue *ret = wrap_new(BufferValue);//PoolMgr::GetIns()->getFromPool<BufferValue>("BufferValue");
 		if (!ret)
 			return ret;
 
@@ -40,7 +40,7 @@ namespace Wrap{
 		}
 		else {
 			ret->type = BufferValue::type_unknow;
-			LOGE("readNativeBufferSingle unknown type= %d\n", type);
+			LOGE("readNativeBufferSingle unknown type= %d", type);
 		}
 
 		// Log.i("readNativeBufferSingle type=" + typeof ret.value + ",value = " + ret.value);
@@ -50,10 +50,10 @@ namespace Wrap{
 	BufferValue* AutoParseNativeBufferEx(NativeBuffer *nativeBuf){
 		BufferValue* ret = NULL;
 		if (!nativeBuf)
-			return ret;
+			return NULL;
 
-		//ret = new BufferValue(); //PoolMgr::GetIns()->getFromPool<BufferValue>("BufferValue");
-		new_(BufferValue, ret);
+		wrap_new_begin;
+		ret = wrap_new(BufferValue);//PoolMgr::GetIns()->getFromPool<BufferValue>("BufferValue");
 		do {
 			char type;
 			nativeBuf->readChar(type);//读取标志位
@@ -67,8 +67,7 @@ namespace Wrap{
 				nativeBuf->readShort(arraLen);
 				// Log.i("readNativeBufferData realType=" + realType + ",arraLen=" + arraLen);
 
-				//BufferValue *arra = new BufferValue(); //PoolMgr::GetIns()->getFromPool<BufferValue>("BufferValue");//数组存储
-				new_(BufferValue, arra);
+				BufferValue *arra = wrap_new(BufferValue);//PoolMgr::GetIns()->getFromPool<BufferValue>("BufferValue");//数组存储
 				arra->type = (BufferValue::eDataType) realType;//数组的具体类型
 				if (realType == 6) {//自定义结构数据
 					//arra->isInner = true;
@@ -80,8 +79,8 @@ namespace Wrap{
 							// Log.i("readNativeBufferData structLen = " + structLen);
 
 							int tempLen = 0;
-							//BufferValue *struc = new BufferValue(); //PoolMgr::GetIns()->getFromPool<BufferValue>("BufferValue");//数据结构
-							new_(BufferValue, struc);
+							BufferValue *struc = wrap_new(BufferValue);//PoolMgr::GetIns()->getFromPool<BufferValue>("BufferValue");//数据结构
+							
 							//struc->isInner = false;
 							struc->type = BufferValue::type_custom;
 							while (tempLen < structLen) {
@@ -303,8 +302,7 @@ namespace Wrap{
 		readString(c, nullptr);//读取字符串长度
 
 		std::string ret;
-		//char* p = new char[c];
-		char* p = (char*)calloc_(c);
+		char* p = (char*)wrap_calloc(c);
 		if (p){
 			//std::unique_ptr<char> pAuto(p);//自动指针
 			Wrap::VoidGuard guard(p);
@@ -329,15 +327,13 @@ std::string jsval_to_std_string_len(JSContext *cx, JS::HandleValue arg){
 	std::string ret;
 	size_t len = JS_GetStringEncodingLength(cx, arg.toString());
 	if (len != -1 && len > 0){
-		//char* temp = new char[len];
-		char* temp = (char*)calloc_(len);
+		char* temp = (char*)wrap_calloc(len);
 		if (temp){
 			//std::unique_ptr<char> pAuto(temp);//自动指针
 			Wrap::VoidGuard guard(temp);
 			JS_EncodeStringToBuffer(cx, arg.toString(), temp, len);
 			std::string tempStr(temp, len);
 			ret = std::move(tempStr);
-			//delete temp;
 		}
 	}
 	return ret;
@@ -776,8 +772,7 @@ bool JS_Native_readString(JSContext *cx, unsigned int argc, jsval *vp)
 		unsigned short c = 0;
 		cobj->readString(c, nullptr);//读取字符串长度
 
-		//char* p = new char[c];
-		char* p = (char*)calloc_(c);
+		char* p = (char*)wrap_calloc(c);
 		if (p){
 			//std::unique_ptr<char> pAuto(p);//自动指针
 			Wrap::VoidGuard guard(p);
@@ -820,8 +815,7 @@ bool JS_Native_readStringNoLen(JSContext *cx, unsigned int argc, jsval *vp){
 		ok &= jsval_to_uint32(cx, args.get(0), &len);
 		JSB_PRECONDITION2(ok, cx, false, "JS_Native_readStringNoLen : Error processing method arguments");
 
-		//char* p = new char[len];
-		char* p = (char*)calloc_(len);
+		char* p = (char*)wrap_calloc(len);
 		if (p){
 			//std::unique_ptr<char> pAuto(p);//自动指针
 			Wrap::VoidGuard guard(p);
@@ -863,8 +857,7 @@ bool JS_Native_readStringWithUtf8(JSContext *cx, unsigned int argc, jsval *vp){
 		unsigned short c = 0;
 		cobj->readString(c, nullptr);//读取字符串长度
 
-		//char* p = new char[c];
-		char* p = (char*)calloc_(c);
+		char* p = (char*)wrap_calloc(c);
 		if (p){
 			//std::unique_ptr<char> pAuto(p);//自动指针
 			Wrap::VoidGuard guard(p);

@@ -60,7 +60,7 @@ public:
 	static uint32_t GetThreadId();
 
 	// Non blocking termination of the spawned thread. Note that it is not safe
-	// to delete this class until the spawned thread has been reclaimed.
+	// to delete1 this class until the spawned thread has been reclaimed.
 	virtual void SetNotAlive() = 0;
 
 	// Tries to spawns a thread and returns true if that was successful.

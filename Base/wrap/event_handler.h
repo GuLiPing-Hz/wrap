@@ -58,18 +58,19 @@ namespace Wrap
 			setReactor(pReactor);
 		}
 		virtual ~IdleEventHandler(){}
+
 		virtual void onRun() = 0;
 		int registerIdle();
 		int unRegisterIdle();
-		virtual void close();
 	};
-	//对事件的处理
+	//对Timer的处理
 	class TMEventHandler : virtual public EventHandler
 	{
 	public:
 		TMEventHandler() :mID(0){}
 		TMEventHandler(Reactor *pReactor) :mID(0) { setReactor(pReactor); }
 		virtual ~TMEventHandler() {}
+
 		//超时处理函数
 		virtual void onTimeOut() = 0;
 		int registerTimer(time_t to);
@@ -79,14 +80,14 @@ namespace Wrap
 	private:
 		int mID;
 	};
-	//对 socket事件的处理
+	//对socket事件的处理
 	class FDEventHandler : virtual public EventHandler
 	{
 	public:
 		virtual ~FDEventHandler() {}
 		FDEventHandler() :mFD(INVALID_SOCKET) {}
 		FDEventHandler(Reactor *pReactor) :mFD(INVALID_SOCKET)  { setReactor(pReactor); }
-		inline void setFD(SOCKET fd) { mFD = fd; }
+		
 		//fd 读的时候 可接受
 		virtual void onFDRead() = 0;
 		//fd 写的时候 可发送
@@ -99,9 +100,13 @@ namespace Wrap
 		int unRegisterRead();
 		int unRegisterWrite();
 
+		inline void setFD(SOCKET fd) { mFD = fd; }
 		inline SOCKET getFD() const { return mFD; }
-		//设置非阻塞
-		int setNonBlocking();
+
+		int setAddrReuse();//设置地址复用
+		int setPortReuse();//端口复用，linux
+		int setNonBlocking();//设置非阻塞
+
 		int setSocketParam();
 	protected:
 		SOCKET mFD;

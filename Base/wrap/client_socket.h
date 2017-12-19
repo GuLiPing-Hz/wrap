@@ -27,6 +27,7 @@
 #include "event_handler.h"
 #include "data_block.h"
 #include "mutex.h"
+#include "funcs.h"
 
 namespace Wrap
 {
@@ -47,7 +48,7 @@ namespace Wrap
 		UdpSocket():mPort(){}
 		UdpSocket(Reactor *pReactor,const char* host,short port) : FDEventHandler(pReactor),mPort(port)
 		{
-			strncpy(mHost,host,sizeof(mHost));
+			StrLCpy(mHost, host, sizeof(mHost));
 		}
 		virtual void onFDWrite(){}
 		virtual int init()
@@ -125,10 +126,11 @@ namespace Wrap
 		DataBlock* getWB(){return &mSenddata;}
 		//add buffer的时候注册写fd_set，这样可以被执行到OnFDWrite();
 		virtual int addBuf(const char* buf,unsigned int buflen);
-		char* getPeerIp();
+		const char* getPeerIp();
 
 		void setSocketListener(OnSocketListener* listener){ m_pListener = listener; }
 
+		static const char* GetPeerIp(int fd);
 		static const char* GetIpFromHost(const char* host, bool is_ipv6 = false);
 		//从域名中解析出Ip地址,只返回第一个解析出来的,字符串保存在静态空间中，返回值不需要释放！
 		static const char* GetIpv4FromHostName(const char* name);

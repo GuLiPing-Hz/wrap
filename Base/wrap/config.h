@@ -128,9 +128,6 @@ void SetLogToFile(const char* path);
 void Printf(int level, const char* file, long line, const char* format, ...);
 void PrintConsole(const char* log);
 
-//windows or ios
-#if defined(_WIN32) || (defined(__APPLE__) && !defined(ANDROID))
-
 // VERBOSE
 #define LOGV(...) Printf(0,__FILE__,__LINE__,__VA_ARGS__)
 // DEBUG
@@ -142,20 +139,15 @@ void PrintConsole(const char* log);
 // ERROR
 #define LOGE(...) Printf(4,__FILE__,__LINE__,__VA_ARGS__)
 
+#define LOGGLP(...) 
+
+//windows or ios
+#if defined(_WIN32) || (defined(__APPLE__) && !defined(ANDROID))
+
 #else //defined(ANDROID)	//Android
 
+//android日志头文件，这里增加了一个打印函数保留体
 #include <android/log.h>
-// VERBOSE
-#define LOGV(...)   __android_log_print(ANDROID_LOG_VERBOSE, "Wrap", __VA_ARGS__)
-// DEBUG
-#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG , "Wrap ", __VA_ARGS__)
-// INFO
-#define LOGI(...)    __android_log_print(ANDROID_LOG_INFO  , "Wrap ",__VA_ARGS__)
-//WARN
-#define LOGW(...)  __android_log_print(ANDROID_LOG_WARN  , "Wrap ", __VA_ARGS__)
-// ERROR
-#define LOGE(...)   __android_log_print(ANDROID_LOG_ERROR  , "Wrap ",__VA_ARGS__)
-
 #define LOGGLP(...)  __android_log_print(ANDROID_LOG_INFO  , " GLP ",__VA_ARGS__)
 
 #endif

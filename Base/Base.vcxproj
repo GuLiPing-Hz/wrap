@@ -123,6 +123,7 @@
     <ClInclude Include="wrap\pool.h" />
     <ClInclude Include="wrap\reactor.h" />
     <ClInclude Include="wrap\seq_map.h" />
+    <ClInclude Include="wrap\serversocket.h" />
     <ClInclude Include="wrap\thread_informer.h" />
     <ClInclude Include="wrap\thread_mgr.h" />
     <ClInclude Include="wrap\timer.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="wrap\buffer_value.cpp" />
     <ClCompile Include="wrap\native_buffer.cpp" />
     <ClCompile Include="wrap\reactor.cpp" />
+    <ClCompile Include="wrap\serversocket.cpp" />
     <ClCompile Include="wrap\thread_informer.cpp" />
     <ClCompile Include="wrap\thread_mgr.cpp" />
     <ClCompile Include="wrap\timer.cpp" />

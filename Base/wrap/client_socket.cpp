@@ -50,7 +50,7 @@ namespace Wrap {
 		Guard lock(mMutex);
         unsigned int buflen = mSenddata.getPos();
         int len = (int)::send(mFD, mSenddata.getBuf(), (int) buflen, 0);
-        //LOGI("%s len = %d\n", __FUNCTION__, len);
+        //LOGI("%s len = %d", __FUNCTION__, len);
         if (len == SOCKET_ERROR) {
 #ifdef WIN32
             DWORD derrno = GetLastError();
@@ -79,31 +79,35 @@ namespace Wrap {
     int ClientSocketBase::addBuf(const char *buf, unsigned int buflen) {
 		Guard lock(mMutex);
         if (mSenddata.append(buf, buflen) != buflen) {
-            LOGE("%s : SendData Append Failed\n", __FUNCTION__);
+            LOGE("%s : SendData Append Failed", __FUNCTION__);
             return -1;
         }
         if (registerWrite() != 0) {
-            LOGE("%s : RegisterWrite Failed\n", __FUNCTION__);
+            LOGE("%s : RegisterWrite Failed", __FUNCTION__);
             return -1;
         }
         return 0;
     }
 
-    char *ClientSocketBase::getPeerIp() {
-        sockaddr_in addr;
+    const char *ClientSocketBase::getPeerIp() {
+		return GetPeerIp(mFD);
+    }
+
+	const char* ClientSocketBase::GetPeerIp(int fd){
+		sockaddr_in addr;
 #ifdef WIN32
-        int len = sizeof(sockaddr_in);
+		int len = sizeof(sockaddr_in);
 #elif defined(NETUTIL_ANDROID)
-        socklen_t len = sizeof(sockaddr_in);
+		socklen_t len = sizeof(sockaddr_in);
 #elif defined(NETUTIL_IOS)
-        unsigned int len = sizeof(sockaddr_in);
+		unsigned int len = sizeof(sockaddr_in);
 #endif
-        getpeername(mFD, (struct sockaddr *) &addr, &len);
-        static char ip[100];
+		getpeername(fd, (struct sockaddr *) &addr, &len);
+		static char ip[100];
 		//strncpy(ip, inet_ntoa(addr.sin_addr), sizeof(ip));
 		inet_ntop(AF_INET, &addr.sin_addr, ip, sizeof(ip));
-        return ip;
-    }
+		return ip;
+	}
 
 	const char* ClientSocketBase::GetIpFromHost(const char* host, bool is_ipv6){
 		static char sIp[100] = { 0 };
@@ -114,7 +118,7 @@ namespace Wrap {
 		// 返回地址信息 - 废弃
 		//         hostent *host = gethostbyname(host);
 		// 		if (!host) {
-		// 			LOGE("%s : gethostbyname return null[%s], check the internet permission or internet connect.\n",
+		// 			LOGE("%s : gethostbyname return null[%s], check the internet permission or internet connect.",
 		// 				__FUNCTION__, host);
 		// 			return sIp;
 		// 		}
@@ -134,7 +138,7 @@ namespace Wrap {
 
 		int ret = getaddrinfo(host, NULL, &hint, &answer);
 		if (ret != 0) {
-			LOGE("%s : gethostbyname return null[%s], check the internet permission or internet connect.\n",
+			LOGE("%s : gethostbyname return null[%s], check the internet permission or internet connect.",
 				__FUNCTION__, host);
 			return sIp;
 		}
@@ -208,7 +212,7 @@ namespace Wrap {
             return 0;
         int errorCode;
 
-        strncpy(mHost, host, sizeof(mHost));
+        StrLCpy(mHost, host, sizeof(mHost));
         mPort = port;
 
         void *svraddr = nullptr;
@@ -280,7 +284,7 @@ namespace Wrap {
                 break;
             }
             default:
-                LOGE("Unknown AF\n");
+                LOGE("Unknown AF");
                 ret = false;
         }
 
@@ -308,7 +312,7 @@ namespace Wrap {
             return -1;
         }
 
-        //LOGI("%s : RegisterWrite wait for connected %d\n",__FUNCTION__,m_fd);
+        //LOGI("%s : RegisterWrite wait for connected %d",__FUNCTION__,m_fd);
         //如果为connect 返回-1 并且errorno为 EAGAIN
         registerWrite();//注册到写fd_set中 等待 OnFDWrite回调，第一次的话就说明这个fd可用了。
         registerTimer(to);//注册超时处理

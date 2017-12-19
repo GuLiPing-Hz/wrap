@@ -31,8 +31,10 @@ namespace Wrap{
 #endif
 	ThreadInformer::~ThreadInformer()
 	{
-		if (mtEventInform)
-			delete mtEventInform;
+		if (mtEventInform){
+			//delete mtEventInform;
+			wrap_delete(EventWrapper, mtEventInform);
+		}
 	}
 
 	int ThreadInformer::init()
@@ -67,7 +69,7 @@ namespace Wrap{
 
 	void ThreadInformer::processIdle()
 	{
-// 		LOGI("%s : wait for", __FUNCTION__);
+		// 		LOGI("%s : wait for", __FUNCTION__);
 		if (mtEventInform->Wait(100) != kEventSignaled)
 		{
 #if defined(NETUTIL_MAC) || defined(NETUTIL_IOS)
@@ -93,18 +95,14 @@ namespace Wrap{
 	void ThreadInformer::dealMessageInner()
 	{
 		//从队列中读出数据处理
-		//LOGI("ThreadInformer::dealMessageInner\n");
+		//LOGI("ThreadInformer::dealMessageInner");
 		if (!mMsgCenter)
 			return;
 
 		MSGINFO _msg = { 0 };
 		while (mMsgCenter->getMessage(_msg) == 0)
 		{
-#if CFG_TARGET_PLATFORM != CC_PLATFORM_ANDROID
-			std::shared_ptr<char> g((char*)_msg.v);
-#else
-			std::tr1::shared_ptr<char> lock((char*)_msg.v);
-#endif // WIN32
+			VoidGuard guard(_msg.v);
 			if (_msg.cmd > MSG_SEND_DATA){
 				dealCustomMsg(&_msg);
 			}
@@ -114,21 +112,54 @@ namespace Wrap{
 				//成功发送数据并且需要服务器回调的，或者压根没成功发送数据的
 				if ((success && _msg.back) || !success){
 					//超时在js 使用native buffer的时候完全不能使用，需要在js端实现超时的逻辑
-					void *mem = malloc(sizeof(ReserveData));
-					if (!mem)
-						return;
-
-					//ReserveData *pRD = new(mem)ReserveData(mMsgCenter);
-					new_(ReserveData, pRD, mMsgCenter);
-					pRD->setTimeout(success ? ReserveData::TYPE_TIMEOUT : ReserveData::TYPE_REQFAILED);
-					pRD->serverid = _msg.server;
-					pRD->seq = _msg.wseq;
-					pRD->t = time(NULL);
-
-					//添加到消息中心，注册timeout
-					mMsgCenter->addTimeout(_msg.wseq, pRD);
+					mMsgCenter->addTimeout(success, &_msg);
 				}
 			}
 		}
+	}
+
+	void MessageCenter::addTimeout(bool success, MSGINFO* msg){
+		wrap_new_begin;
+		ReserveData *pRD = wrap_new(ReserveData);
+		if (!pRD)
+			return;
+		pRD->setTimeout(success ? ReserveData::TYPE_TIMEOUT : ReserveData::TYPE_REQFAILED);
+		pRD->serverid = msg->server;
+		pRD->seq = msg->wseq;
+		pRD->t = time(NULL);
+
+		//添加到消息中心，注册timeout
+		put(msg->wseq, pRD);
+	}
+
+	void MessageCenter::onTimeOut(){
+		Wrap::Guard lock(mCS);//安全锁
+
+		//对当前的监听事件检查一遍，看下哪一个超时了
+		SeqMap_ThreadSafe<ReserveData*>::iterator it;
+		for (it = begin(); it != end();)
+		{
+			ReserveData* pRD = it->second;
+			if (pRD && ((time(NULL) - pRD->t) > pRD->timeout)){//超时，没响应
+				onTimeoutData(pRD);
+				destroyReserveData(pRD);//释放内存
+				it = del(it);//移除
+			}
+			else{
+				it++;
+			}
+		}
+	}
+
+	void MessageCenter::delTimeout(int seq){
+		ReserveData **data = get(seq);
+		if (data && *data) {
+			destroyReserveData(*data);
+			del(seq);//移除
+		}
+	}
+
+	void MessageCenter::destroyReserveData(ReserveData *pRD){
+		wrap_free(pRD);
 	}
 }

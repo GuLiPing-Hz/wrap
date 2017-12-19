@@ -1,6 +1,7 @@
 ﻿#include "../config.h"
 #include "event.h"
 #include "thread.h"
+#include "../pool.h"
 
 #if defined(_WIN32)
 #include <Windows.h>
@@ -127,14 +128,15 @@ void clock_gettime_common(struct timespec *__tp){
 }
 
 EventWrapper* EventPosix::Create() {
-	EventPosix* ptr = new EventPosix;
+	wrap_new_begin;
+	EventPosix* ptr = wrap_new(EventPosix);//
 	if (!ptr) {
 		return NULL;
 	}
 
 	const int error = ptr->Construct();
 	if (error) {
-		delete ptr;
+		wrap_delete(EventPosix,ptr);//delete1 ptr;
 		return NULL;
 	}
 	return ptr;
@@ -354,15 +356,17 @@ bool EventPosix::StopTimer() {
 			return false;
 		}
 
-		delete timer_thread_;
-		timer_thread_ = 0;
+		//delete1 timer_thread_;
+		//timer_thread_ = 0;
+		wrap_delete(ThreadWrapper,timer_thread_);
 	}
 	if (timer_event_) {
-		delete timer_event_;
-		timer_event_ = 0;
+		//delete1 timer_event_;
+		//timer_event_ = 0;
+		wrap_delete(EventPosix,timer_event_);
 	}
 
-	// Set time to zero to force new reference time for the timer.
+	// Set time to zero to force new1 reference time for the timer.
 	memset(&created_at_, 0, sizeof(created_at_));
 	count_ = 0;
 	return true;
@@ -372,7 +376,9 @@ bool EventPosix::StopTimer() {
 
 EventWrapper* EventWrapper::Create() {
 #if defined(_WIN32)
-	return new EventWindows();
+	//return new1 EventWindows();
+	wrap_new_begin;
+	return wrap_new(EventWindows);
 #else
 	return EventPosix::Create();
 #endif

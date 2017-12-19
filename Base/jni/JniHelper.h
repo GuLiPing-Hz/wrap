@@ -97,9 +97,9 @@ namespace Wrap {
             if (Wrap::JniHelper::getStaticMethodInfo(t, threadId, className.c_str(),
                                                         methodName.c_str(),
                                                         signature.c_str())) {
-                //LOGD("callStaticVoidMethod 1 env = %x\n", t.env);
+                //LOGD("callStaticVoidMethod 1 env = %x", t.env);
                 t.env->CallStaticVoidMethod(t.classID, t.methodID, convert(t, xs)...);
-                //LOGD("callStaticVoidMethod 1 env = %x\n", t.env);
+                //LOGD("callStaticVoidMethod 1 env = %x", t.env);
                 t.env->DeleteLocalRef(t.classID);
                 deleteLocalRefs(t.env);
             } else {
@@ -222,11 +222,11 @@ namespace Wrap {
             if (Wrap::JniHelper::getStaticMethodInfo(t, threadId, className.c_str(),
                                                         methodName.c_str(),
                                                         signature.c_str())) {
-                //LOGD("callStaticStringMethod 1 env = %x\n", t.env);
+                //LOGD("callStaticStringMethod 1 env = %x", t.env);
                 jstring jret = (jstring) t.env->CallStaticObjectMethod(t.classID, t.methodID,
                                                                        convert(t, xs)...);
 
-                //LOGD("callStaticStringMethod 2 env = %x\n", t.env);
+                //LOGD("callStaticStringMethod 2 env = %x", t.env);
                 ret = Wrap::JniHelper::jstring2string(t.env, jret);
                 t.env->DeleteLocalRef(t.classID);
                 t.env->DeleteLocalRef(jret);

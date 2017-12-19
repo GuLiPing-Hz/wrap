@@ -369,7 +369,7 @@ int Http_unencode_gzip_write(Wrap::CHttpDownload* k, unsigned char* httbBuf, uns
 			free(oldblock);
 			return exit_zlib(z, &k->zlib_init, -1);
 		}
-		/* Append the new block of data to the previous one */
+		/* Append the new1 block of data to the previous one */
 		memcpy(z->next_in + z->avail_in - httpBufLen, httbBuf
 			, httpBufLen);
 

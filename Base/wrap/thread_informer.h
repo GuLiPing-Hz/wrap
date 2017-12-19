@@ -17,7 +17,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "allocator.h"
+#include "pool.h"
+#include "seq_map.h"
 
 namespace Wrap{
 
@@ -86,8 +87,10 @@ namespace Wrap{
 
 	class ReserveData;
 
-	class MessageCenter{
+	class MessageCenter : public TMEventHandler, public SeqMap_ThreadSafe<ReserveData*>
+	{
 	public:
+		MessageCenter(Reactor *pReactor) :TMEventHandler(pReactor){}
 		virtual ~MessageCenter(){}
 
 		int postMessage(int serverId, ClientSocket *conn, int cmd, void *v, int len, int seq, bool back = true){
@@ -95,8 +98,7 @@ namespace Wrap{
 			if (m_requestlist.size() > 1000)//请求队列最多1000
 				return -1;
 
-			//char* data = new char[len];
-			char* data = (char*)calloc_(len);
+			char* data = (char*)wrap_calloc(len);
 			if (!data)
 				return -1;
 			memcpy(data, v, len);//拷贝数据
@@ -131,10 +133,18 @@ namespace Wrap{
 			return pSvr->sendBuf(buf, len) ? 0 : -1;
 		}
 
+		//通知中心
 		virtual ThreadInformer* getInformer() = 0;
-		virtual void addTimeout(int seq, ReserveData* data) = 0;
-		virtual void delTimeout(int seq) = 0;
-		virtual void onTimeout(ReserveData* data) = 0;
+		//对数据进行处理
+		virtual void onTimeoutData(ReserveData* data) = 0;
+
+		virtual void addTimeout(bool success, MSGINFO* msg);
+
+		virtual void onTimeOut();
+
+		virtual void delTimeout(int seq);
+
+		void destroyReserveData(ReserveData *pRD);
 
 	protected:
 		std::list<Wrap::MSGINFO> m_requestlist;
@@ -150,15 +160,8 @@ namespace Wrap{
 			TYPE_REQFAILED
 		};
 
-		ReserveData(MessageCenter* center) :msgCenter(center){
-			assert(msgCenter != nullptr);
-		}
+		ReserveData(){}
 		virtual ~ReserveData(){}
-
-		//网络线程
-		void OnTimeOut(){
-			msgCenter->onTimeout(this);
-		}
 
 		void setTimeout(eType value){
 			type = value;
@@ -175,7 +178,6 @@ namespace Wrap{
 		int seq;
 		time_t t;
 		int timeout;
-		MessageCenter* msgCenter;
 	};
 
 }

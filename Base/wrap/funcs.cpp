@@ -3,14 +3,8 @@
 #include "config.h"
 #include "pool.h"
 
-Wrap::PoolMgr* Wrap::PoolMgr::sIns = NULL;
-
 #ifdef _WIN32
 #include <windows.h>
-#endif
-
-#ifdef NETUTIL_ANDROID
-#include <android/log.h>
 #endif
 
 #include <stdio.h>
@@ -18,6 +12,11 @@ Wrap::PoolMgr* Wrap::PoolMgr::sIns = NULL;
 #include <sstream>
 #include <time.h>
 #include <string.h>
+#include <process.h>
+#include <stdint.h>
+
+Wrap::Allocator* Wrap::Allocator::sIns = NULL;
+Wrap::PoolMgr* Wrap::PoolMgr::sIns = NULL;
 
 static std::string sPath;
 static int sLevel = 0;
@@ -73,7 +72,7 @@ void Printf(int level, const char* file, long line, const char* format, ...)
 	va_end(args);
 
 	std::stringstream os;
-	os << "[" << gLogStr[level] << "]" << file << "_" << line << " : " << buf;//std::endl;
+	os << "[" << gLogStr[level] << "]" << file << "_" << line << " : " << buf << std::endl;
 
 	if (!sPath.empty()){//是否已经指定写入文件
 		static char timeBuf[260];
@@ -123,6 +122,55 @@ void doswap(bool swap, void *p, size_t n)
 	}
 }
 
+
+//come from Libevent begin
+unsigned int
+evutil_weakrand_seed_(unsigned int *state, unsigned int seed)
+{
+	if (seed == 0) {
+		seed = (unsigned int)time(NULL);
+#ifdef _WIN32
+		seed += (unsigned int)_getpid();
+#else
+		seed += (unsigned int)getpid();
+#endif
+	}
+	*state = seed;
+	return seed;
+}
+
+int
+evutil_weakrand_(unsigned int *state)
+{
+	/* This RNG implementation is a linear congruential generator, with
+	* modulus 2^31, multiplier 1103515245, and addend 12345.  It's also
+	* used by OpenBSD, and by Glibc's TYPE_0 RNG.
+	*
+	* The linear congruential generator is not an industrial-strength
+	* RNG!  It's fast, but it can have higher-order patterns.  Notably,
+	* the low bits tend to have periodicity.
+	*/
+	*state = (*state * 1103515245 + 12345) & 0x7fffffff;
+	return (int)(*state);
+}
+
+int
+evutil_weakrand_range_(unsigned int *state, int top)
+{
+	int divisor, result;
+
+	/* We can't just do weakrand() % top, since the low bits of the LCG
+	* are less random than the high ones.  (Specifically, since the LCG
+	* modulus is 2^N, every 2^m for m<N will divide the modulus, and so
+	* therefore the low m bits of the LCG will have period 2^m.) */
+	divisor = INT32_MAX / top;
+	do {
+		result = evutil_weakrand_(state) / divisor;
+	} while (result >= top);
+	return result;
+}
+//come from Libevent end
+
 size_t StrLCpy(char *dst, const char *src, size_t siz)
 {
 	register char *d = dst;//register把变量放到cpu寄存器中，提高访问速度
@@ -151,7 +199,7 @@ size_t StrLCpy(char *dst, const char *src, size_t siz)
 void LogCiphertext(const unsigned char* ciphertext, size_t len)
 {
 	std::stringstream ss;
-	int pos = 0;
+	size_t pos = 0;
 	while (pos < len){
 		char buf[10] = { 0 };
 		sprintf(buf, "%x-", ciphertext[pos] & 0xff);
@@ -188,7 +236,7 @@ void SleepMs(int msecs) {
 
 
 std::string XorString(const char *data, int datalen, const char *key, int len) {
-	char *pBuf = (char*)calloc_(datalen);
+	char *pBuf = (char*)wrap_calloc(datalen);
 	Wrap::VoidGuard guard(pBuf);
 	if (!pBuf)
 		return "oom";

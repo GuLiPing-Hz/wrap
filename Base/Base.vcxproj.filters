@@ -225,6 +225,9 @@
     <ClInclude Include="wrap\allocator.h">
       <Filter>wrap</Filter>
     </ClInclude>
+    <ClInclude Include="wrap\serversocket.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -390,6 +393,9 @@
       <Filter>wrap\ext</Filter>
     </ClCompile>
     <ClCompile Include="wrap\native_buffer.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="wrap\serversocket.cpp">
       <Filter>wrap</Filter>
     </ClCompile>
   </ItemGroup>

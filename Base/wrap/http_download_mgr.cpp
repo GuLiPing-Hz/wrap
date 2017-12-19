@@ -20,12 +20,11 @@ CHttpDownloadMgr::CHttpDownloadMgr()
 :mThread(NULL)
 {
 	// TODO Auto-generated constructor stub
+	wrap_new_begin;
 	for (int i = 0; i < MAX_DOWNLOAD; i++){
-		new_(CHttpDownload, p, &mReactor, this);// new CHttpDownload(&mReactor, this);
-		mArraHttpDownload[i] = p;
+		mArraHttpDownload[i] = wrap_new(CHttpDownload, &mReactor, this);//
 	}
 		
-
 	mThread = ThreadWrapper::CreateThread(&CHttpDownloadMgr::HttpDownload,(void*)this,kLowPriority,"Http download");
 }
 
@@ -36,13 +35,16 @@ CHttpDownloadMgr::~CHttpDownloadMgr() {
 	{
 		if(!mThread->Stop())
 			mThread->Terminate(0);
-		delete mThread;
+		//delete1 mThread;
+		wrap_delete(ThreadWrapper, mThread);
 	}
 
 	for(int i=0;i<MAX_DOWNLOAD;i++)
 	{
-		if(mArraHttpDownload[i])
-			delete mArraHttpDownload[i];
+		if (mArraHttpDownload[i]){
+			//delete mArraHttpDownload[i];
+			wrap_delete(CHttpDownload, mArraHttpDownload[i]);
+		}
 	}
 }
 
@@ -130,7 +132,7 @@ int CHttpDownloadMgr::addTask(TaskDownload& task,bool priority)
 		memcpy(&mCurTask,&task,sizeof(task));
 		if(!mArraHttpDownload[nIndex]->startDownload())
 		{
-			LOGE("%s : %s , start download failed\n",__FUNCTION__,task.url);
+			LOGE("%s : %s , start download failed",__FUNCTION__,task.url);
 			doNext(false,NULL);
 			return -1;
 		}
@@ -155,7 +157,7 @@ void CHttpDownloadMgr::doNext(bool success,CHttpDownload* worker)
 	if(info.onFinish)
 		info.onFinish(&info,success,info.userData);
 	if (info.info.saveBuf)//释放内存
-		free(info.info.saveBuf);
+		wrap_free(info.info.saveBuf);
 
 	Guard lock(mCS);
 	mSetUrl.erase(info.url);
@@ -189,7 +191,7 @@ void CHttpDownloadMgr::doNext(bool success,CHttpDownload* worker)
 		mArraHttpDownload[nIndex]->initDownload(next.url,next.onProgress,&next.info);
 		if(!mArraHttpDownload[nIndex]->startDownload())
 		{
-			LOGE("%s : %s , start download failed\n",__FUNCTION__,next.url);
+			LOGE("%s : %s , start download failed",__FUNCTION__,next.url);
 			if(next.onFinish)
 				next.onFinish(&next,false,next.userData);
 			//继续处理下一个
