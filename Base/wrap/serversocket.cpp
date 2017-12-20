@@ -1,4 +1,4 @@
-#include "serversocket.h"
+ï»¿#include "serversocket.h"
 #include "pool.h"
 #include <stdlib.h>
 
@@ -6,20 +6,20 @@ namespace Wrap{
 
 	int ListenSocketBase::listen()
 	{
-		mFD = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);//socket ÃèÊö·û
+		mFD = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);//socket æè¿°ç¬¦
 		if (INVALID_SOCKET == mFD)
 		{
 			LOGE("create socket error %d", errno);
 			return -1;
 		}
-		LOGI("·þÎñÆ÷´´½¨ÍøÂçÃèÊö·û fd=%d", mFD);
+		LOGI("æœåŠ¡å™¨åˆ›å»ºç½‘ç»œæè¿°ç¬¦ fd=%d", mFD);
 
 		if (setAddrReuse() != 0){
 			LOGE("setAddrReuse error %d", errno);
 			closeSocket();
 			return -1;
 		}
-		LOGI("·þÎñÆ÷ÉèÖÃµØÖ·ÖØÓÃ³É¹¦");
+		LOGI("æœåŠ¡å™¨è®¾ç½®åœ°å€é‡ç”¨æˆåŠŸ");
 
 		struct sockaddr_in ipAddr = { 0 };
 		ipAddr.sin_family = AF_INET;
@@ -32,13 +32,13 @@ namespace Wrap{
 			closeSocket();
 			return -1;
 		}
-		LOGI("·þÎñÆ÷°ó¶¨µØÖ·³É¹¦");
+		LOGI("æœåŠ¡å™¨ç»‘å®šåœ°å€æˆåŠŸ");
 
 		if (::listen(mFD, SOMAXCONN) != 0){
 			LOGE("socket listen error %d\n", errno);
 			return -1;
 		}
-		LOGI("·þÎñÆ÷¼àÌý³É¹¦");
+		LOGI("æœåŠ¡å™¨ç›‘å¬æˆåŠŸ");
 
 		registerRead();
 		return 0;
@@ -76,9 +76,9 @@ namespace Wrap{
 	}
 	void ListenSocketBase2::onAccept(int fd)
 	{
-		if (m_pClientMap.get(fd) == NULL){//¿ÉÄÜÂð£¿
+		if (m_pClientMap.get(fd) == NULL){//å¯èƒ½å—ï¼Ÿ
 
-			LOGI("¿Í»§¶ËÐÂÁ¬½Ó:½ÓÈë fd = %d,ip = %s", fd, ClientSocketBase::GetPeerIp(fd));
+			LOGI("å®¢æˆ·ç«¯æ–°è¿žæŽ¥:æŽ¥å…¥ fd = %d,ip = %s", fd, ClientSocketBase::GetPeerIp(fd));
 
 			ClientSocketBase* pClient = getIdleClient();
 			if (pClient){
@@ -87,7 +87,7 @@ namespace Wrap{
 				pClient->setSocketListener(this);
 				m_pClientMap.put(fd, pClient);
 
-				//×¢²áµ½¼àÌýsocket¶ÁÊÂ¼þ
+				//æ³¨å†Œåˆ°ç›‘å¬socketè¯»äº‹ä»¶
 				pClient->registerRead();
 			}
 		}
@@ -96,25 +96,25 @@ namespace Wrap{
 	{
 		LOGE("%s error = %d", __FUNCTION__, code);
 	}
-	//Õâ¸öÃ»ÓÃ...
+	//è¿™ä¸ªæ²¡ç”¨...
 	bool ListenSocketBase2::onSocketConnect(ClientSocketBase* client)
 	{
 		LOGI("%s,fd=%d,ip = %s\n", __FUNCTION__, client->getFD(), client->getPeerIp());
 		return true;
 	}
-	//Õâ¸öÃ»ÓÃ...
+	//è¿™ä¸ªæ²¡ç”¨...
 	void ListenSocketBase2::onSocketConnectTimeout(ClientSocketBase* client)
 	{
 		LOGI("%s,fd=%d,ip = %s\n", __FUNCTION__, client->getFD(), client->getPeerIp());
 		dealErrClient(client);
 	}
-	// Õý³£¹Ø±Õ(±»¶¯¹Ø±Õ),recv == 0µÄÇé¿ö
+	// æ­£å¸¸å…³é—­(è¢«åŠ¨å…³é—­),recv == 0çš„æƒ…å†µ
 	void ListenSocketBase2::onSocketClose(ClientSocketBase* client)
 	{
 		LOGI("%s,fd=%d,ip = %s\n", __FUNCTION__, client->getFD(), client->getPeerIp());
 		dealErrClient(client);
 	}
-	// errcodeÎª´íÎóÂë(socketÌá¹©)
+	// errcodeä¸ºé”™è¯¯ç (socketæä¾›)
 	void ListenSocketBase2::onSocketConnectError(ClientSocketBase* client, int errCode)
 	{
 		LOGE("%s,fd=%d,ip = %s\n", __FUNCTION__, client->getFD(), client->getPeerIp());
@@ -130,7 +130,7 @@ namespace Wrap{
 		LOGE("%s,error = %d,fd=%d,ip = %s\n", __FUNCTION__, errCode, client->getFD(), client->getPeerIp());
 		dealErrClient(client);
 	}
-	// ÍøÂç²ã´íÎó(errCodeÍøÂç²ã¶¨Òå)
+	// ç½‘ç»œå±‚é”™è¯¯(errCodeç½‘ç»œå±‚å®šä¹‰)
 	void ListenSocketBase2::onNetLevelError(ClientSocketBase* client, int errCode)
 	{
 		LOGE("%s,error = %d,fd=%d,ip = %s\n", __FUNCTION__, errCode, client->getFD(), client->getPeerIp());

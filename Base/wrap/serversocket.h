@@ -1,4 +1,4 @@
-#ifndef GLP_SERVERSOCKET_H_
+ï»¿#ifndef GLP_SERVERSOCKET_H_
 #define GLP_SERVERSOCKET_H_
 
 #include "client_socket.h"
@@ -48,18 +48,18 @@ namespace Wrap{
 		virtual void onAccept(int fd);
 		virtual void onAcceptError(int code);
 
-		/*¼àÌıÀ´×Ô¿Í»§¶ËµÄsocket×´Ì¬*/
-		// Á¬½Ó³É¹¦
+		/*ç›‘å¬æ¥è‡ªå®¢æˆ·ç«¯çš„socketçŠ¶æ€*/
+		// è¿æ¥æˆåŠŸ
 		virtual bool onSocketConnect(ClientSocketBase* client);
-		// Á¬½Ó³¬Ê±
+		// è¿æ¥è¶…æ—¶
 		virtual void onSocketConnectTimeout(ClientSocketBase* client);
-		// Õı³£¹Ø±Õ(±»¶¯¹Ø±Õ),recv == 0µÄÇé¿ö
+		// æ­£å¸¸å…³é—­(è¢«åŠ¨å…³é—­),recv == 0çš„æƒ…å†µ
 		virtual void onSocketClose(ClientSocketBase* client);
-		// errcodeÎª´íÎóÂë(socketÌá¹©)
+		// errcodeä¸ºé”™è¯¯ç (socketæä¾›)
 		virtual void onSocketConnectError(ClientSocketBase* client, int errCode);
 		virtual void onSocketRecvError(ClientSocketBase* client, int errCode);
 		virtual void onSocketSendError(ClientSocketBase* client, int errCode);
-		// ÍøÂç²ã´íÎó(errCodeÍøÂç²ã¶¨Òå)
+		// ç½‘ç»œå±‚é”™è¯¯(errCodeç½‘ç»œå±‚å®šä¹‰)
 		virtual void onNetLevelError(ClientSocketBase* client, int errCode);
 
 	protected:
@@ -70,9 +70,9 @@ namespace Wrap{
 		void setIdleClient(ClientSocketBase* p);
 	protected:
 		DataDecoderBase* m_pDecoder;
-		//»îÔ¾ÔÚÏßµÄ¿Í»§¶Ë¶ÔÏóMap
+		//æ´»è·ƒåœ¨çº¿çš„å®¢æˆ·ç«¯å¯¹è±¡Map
 		ClientMap m_pClientMap;
-		//¿ÕÏĞ¿Í»§¶Ë¶ÔÏóÄÚ´æ³Ø
+		//ç©ºé—²å®¢æˆ·ç«¯å¯¹è±¡å†…å­˜æ± 
 		ClientList m_gClientList;
 	};
 
