@@ -36,6 +36,7 @@ evutil_weakrand_range_(unsigned int *state, int top);
 * Returns strlen(src); if retval >= siz, truncation occurred.
 */
 size_t StrLCpy(char *dst, const char *src, size_t siz);
+#define STR_CPY(dst,src) StrLCpy(dst,src,sizeof(dst))
 
 //打印密文，通过16进制的方式打印
 void LogCiphertext(const unsigned char* ciphertext, size_t len);

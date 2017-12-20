@@ -1,0 +1,582 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="wrap">
+      <UniqueIdentifier>{c91efa21-91ca-4fd5-a21e-d57e82ac63c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="zip">
+      <UniqueIdentifier>{812f9016-d0cc-4735-a737-54ad4b88cb3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="zlib">
+      <UniqueIdentifier>{e39e4ac1-ee7d-49ad-9239-ccd7f2bd4de0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="crypto">
+      <UniqueIdentifier>{32342043-e2a6-4e8d-bf04-b9b5e07fe7cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="compat">
+      <UniqueIdentifier>{852c0f89-96bc-47dd-94d1-9f18acb69542}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="charset">
+      <UniqueIdentifier>{350d28ba-edba-461c-b7f7-836d3bcf548f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="jni">
+      <UniqueIdentifier>{a4d326ba-24b5-4cf6-80d4-9a641d577e1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="wrap\ext">
+      <UniqueIdentifier>{532a57c3-bdc5-487b-8340-f0b4d4e2e3fb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="charset\CharsetCodec.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="charset\Chinese.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="charset\Utf.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="compat\endian.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\aes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\chacha20.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\common.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\ctaes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\hmac_sha256.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\hmac_sha512.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\md5.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\ripemd160.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\sha1.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\sha256.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="crypto\sha512.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\JniHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\allocator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\client_socket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\config.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\counter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\data_block.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\data_decoder.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\event_handler.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\ext\event.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\ext\set_thread_name_win.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\ext\thread.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\ext\univalue.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\ext\univalue_escapes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\ext\univalue_utffilter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\file_mgr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\funcs.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\httpcontent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\http_download.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\http_download_mgr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\http_downtype.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\buffer_value.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\mutex.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\native_buffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\pool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\reactor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\seq_map.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\serversocket.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\thread_informer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\thread_mgr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\timer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wrap\typedefs.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zip\crypt.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zip\ioapi.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zip\unzip.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zip\zip.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\crc32.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\deflate.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\gzguts.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inffast.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inffixed.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inflate.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\inftrees.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\trees.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zconf.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zlib.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib\zutil.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\charset\Chinese.h">
+      <Filter>charset</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\charset\Utf.h">
+      <Filter>charset</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\charset\CharsetCodec.h">
+      <Filter>charset</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\compat\endian.h">
+      <Filter>compat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\crypto\common.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\crypto\ctaes.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\crypto\hmac_sha256.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\crypto\hmac_sha512.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\crypto\md5.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\crypto\ripemd160.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\crypto\sha1.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\crypto\sha256.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\crypto\sha512.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\crypto\aes.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\crypto\chacha20.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\jni\JniHelper.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\ext\univalue.h">
+      <Filter>wrap\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\ext\univalue_escapes.h">
+      <Filter>wrap\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\ext\univalue_utffilter.h">
+      <Filter>wrap\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\ext\event.h">
+      <Filter>wrap\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\ext\set_thread_name_win.h">
+      <Filter>wrap\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\ext\thread.h">
+      <Filter>wrap\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\client_socket.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\config.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\counter.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\data_block.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\data_decoder.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\event_handler.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\file_mgr.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\funcs.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\http_download.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\http_download_mgr.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\http_downtype.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\httpcontent.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\mutex.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\native_buffer.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\pool.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\reactor.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\seq_map.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\serversocket.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\thread_informer.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\thread_mgr.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\timer.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\typedefs.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\allocator.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\buffer_value.h">
+      <Filter>wrap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\zip\unzip.h">
+      <Filter>zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\zip\zip.h">
+      <Filter>zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\zip\crypt.h">
+      <Filter>zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\zip\ioapi.h">
+      <Filter>zip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\zlib\crc32.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\zlib\deflate.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\zlib\gzguts.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\zlib\inffast.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\zlib\inffixed.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\zlib\inflate.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\zlib\inftrees.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\zlib\trees.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\zlib\zconf.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\zlib\zlib.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\zlib\zutil.h">
+      <Filter>zlib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Base.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\charset\Chinese.cpp">
+      <Filter>charset</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\charset\Utf.cpp">
+      <Filter>charset</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\charset\CharsetCodec.cpp">
+      <Filter>charset</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\crypto\ctaes.c">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\crypto\hmac_sha256.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\crypto\hmac_sha512.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\crypto\md5.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\crypto\ripemd160.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\crypto\sha1.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\crypto\sha256.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\crypto\sha256_sse4.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\crypto\sha512.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\crypto\aes.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\crypto\chacha20.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\jni\JniHelper.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\ext\univalue.cpp">
+      <Filter>wrap\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\ext\univalue_get.cpp">
+      <Filter>wrap\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\ext\univalue_read.cpp">
+      <Filter>wrap\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\ext\univalue_write.cpp">
+      <Filter>wrap\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\ext\event.cpp">
+      <Filter>wrap\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\ext\thread.cpp">
+      <Filter>wrap\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\client_socket.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\data_decoder.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\event_handler.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\file_mgr.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\funcs.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\http_download.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\http_download_mgr.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\httpcontent.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\native_buffer.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\reactor.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\serversocket.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\thread_informer.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\thread_mgr.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\timer.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\wrap\buffer_value.cpp">
+      <Filter>wrap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zip\zip.c">
+      <Filter>zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zip\ioapi.c">
+      <Filter>zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zip\unzip.c">
+      <Filter>zip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zlib\deflate.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zlib\gzclose.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zlib\gzlib.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zlib\gzread.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zlib\gzwrite.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zlib\infback.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zlib\inffast.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zlib\inflate.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zlib\inftrees.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zlib\trees.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zlib\uncompr.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zlib\zutil.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zlib\adler32.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zlib\compress.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\zlib\crc32.c">
+      <Filter>zlib</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
