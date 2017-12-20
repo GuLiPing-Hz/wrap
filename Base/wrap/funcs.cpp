@@ -1,10 +1,13 @@
-﻿#include "funcs.h"
+#include "funcs.h"
 #include <stdio.h>
 #include "config.h"
 #include "pool.h"
 
 #ifdef _WIN32
 #include <windows.h>
+#include <process.h>
+#else
+#include <unistd.h>
 #endif
 
 #include <stdio.h>
@@ -12,7 +15,6 @@
 #include <sstream>
 #include <time.h>
 #include <string.h>
-#include <process.h>
 #include <stdint.h>
 
 Wrap::Allocator* Wrap::Allocator::sIns = NULL;

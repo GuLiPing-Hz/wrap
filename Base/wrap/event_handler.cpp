@@ -1,4 +1,4 @@
-﻿#include "event_handler.h"
+#include "event_handler.h"
 #include "reactor.h"
 #ifdef WIN32
 #include <mstcpip.h>
@@ -107,7 +107,7 @@ namespace Wrap
 		int on = 1;
 		/* REUSEPORT on Linux 3.9+ means, "Multiple servers (processes or
 		* threads) can bind to the same port if they each set the option. */
-		if (setsockopt(mFD, SOL_SOCKET, SO_REUSEPORT, (void*)&on, (ev_socklen_t)sizeof(on)) == SOCKET_ERROR)
+		if (setsockopt(mFD, SOL_SOCKET, SO_REUSEPORT, (void*)&on, (socklen_t)sizeof(on)) == SOCKET_ERROR)
 			return -1;
 #endif
 		return 0;

@@ -1,4 +1,4 @@
-﻿/*
+/*
 	注释时间:2014-4-25
 	解压zip文件类的封装,提供类函数，方便使用
 */
@@ -52,7 +52,7 @@ namespace Wrap{
 
 		static bool IsFileExits(const char* filename);
 
-		static bool RenameFile(const char* dst, const char* src){ MoveFileG(dst, src); }
+		static void RenameFile(const char* dst, const char* src){ MoveFileG(dst, src); }
 
 		static void MoveFileG(const char* dst, const char* src);
 

@@ -1,4 +1,4 @@
-﻿#ifndef ALLOCATOR_H___
+#ifndef ALLOCATOR_H___
 #define ALLOCATOR_H___
 
 #include "config.h"
@@ -57,7 +57,7 @@ namespace Wrap{
 			}
 			return sIns;
 		}
-		static Allocator* ReleaseIns(){
+		static void ReleaseIns(){
 			delete sIns;
 			sIns = NULL;
 		}

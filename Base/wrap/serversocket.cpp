@@ -1,4 +1,4 @@
-﻿#include "serversocket.h"
+#include "serversocket.h"
 #include "pool.h"
 #include <stdlib.h>
 
@@ -46,7 +46,11 @@ namespace Wrap{
 	void ListenSocketBase::onFDRead()
 	{
 		sockaddr addr;
+#ifdef WIN32
 		int len = sizeof(addr);
+#else
+        socklen_t len = sizeof(addr);
+#endif
 		SOCKET clientSocket = accept(mFD, &addr, &len);
 		if (clientSocket == INVALID_SOCKET){
 			onAcceptError(errno);
