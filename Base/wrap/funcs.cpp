@@ -1,4 +1,4 @@
-#include "funcs.h"
+ï»¿#include "funcs.h"
 #include <stdio.h>
 #include "config.h"
 #include "pool.h"
@@ -34,7 +34,7 @@ void SetLogToFile(const char* path)
 
 void PrintConsole(const char* log)
 {
-	//Èç¹ûÉÏÃæÃ»ÓĞ³É¹¦´òÓ¡ÈÕÖ¾£¬ÄÇÃ´ÎÒÃÇÖ±½ÓÊä³öµ½ÆÁÄ»ÉÏ
+	//å¦‚æœä¸Šé¢æ²¡æœ‰æˆåŠŸæ‰“å°æ—¥å¿—ï¼Œé‚£ä¹ˆæˆ‘ä»¬ç›´æ¥è¾“å‡ºåˆ°å±å¹•ä¸Š
 #ifdef _WIN32
 	OutputDebugStringA(log);
 #elif defined(ANDROID)
@@ -74,12 +74,12 @@ void Printf(int level, const char* file, long line, const char* format, ...)
 	std::stringstream os;
 	os << "[" << gLogStr[level] << "]" << file << "_" << line << " : " << buf << std::endl;
 
-	if (!sPath.empty()){//ÊÇ·ñÒÑ¾­Ö¸¶¨Ğ´ÈëÎÄ¼ş
+	if (!sPath.empty()){//æ˜¯å¦å·²ç»æŒ‡å®šå†™å…¥æ–‡ä»¶
 		static char timeBuf[260];
 		time_t timep;
 		struct tm *p;
 		time(&timep);
-		p = gmtime(&timep); /* »ñÈ¡µ±Ç°Ê±¼ä */
+		p = gmtime(&timep); /* è·å–å½“å‰æ—¶é—´ */
 		sprintf(timeBuf, "%s_%02d-%02d.log", sPath.c_str(), (1 + p->tm_mon), p->tm_mday);
 
 		FILE* fp = fopen(timeBuf, "ab");
@@ -99,12 +99,12 @@ void Printf(int level, const char* file, long line, const char* format, ...)
 
 bool doendian(int c)
 {	// 0x12345678
-	// 12 34 56 78 ´ó¶Ë×Ö½ÚĞò
-	// 78 56 34 12 Ğ¡¶Ë×Ö½ÚĞò
+	// 12 34 56 78 å¤§ç«¯å­—èŠ‚åº
+	// 78 56 34 12 å°ç«¯å­—èŠ‚åº
 	int x = 1;//0x00000001
 	int e = *(char*)&x;
-	if (c == OP_LITTLEENDIAN) return !e;//µ±Ç°Ê¹ÓÃĞ¡¶Ë¸ñÊ½£¬±¾»ú×Ö½ÚÂëÊÇ´ó¶ËµÄ 1
-	if (c == OP_BIGENDIAN) return e == 1;//µ±Ç°Ê¹ÓÃ´ó¶Ë¸ñÊ½£¬±¾»ú×Ö½ÚÂëÊÇĞ¡¶ËµÄ 1
+	if (c == OP_LITTLEENDIAN) return !e;//å½“å‰ä½¿ç”¨å°ç«¯æ ¼å¼ï¼Œæœ¬æœºå­—èŠ‚ç æ˜¯å¤§ç«¯çš„ 1
+	if (c == OP_BIGENDIAN) return e == 1;//å½“å‰ä½¿ç”¨å¤§ç«¯æ ¼å¼ï¼Œæœ¬æœºå­—èŠ‚ç æ˜¯å°ç«¯çš„ 1
 	if (c == OP_NATIVE) return 0;
 	return 0;
 }
@@ -173,7 +173,7 @@ evutil_weakrand_range_(unsigned int *state, int top)
 
 size_t StrLCpy(char *dst, const char *src, size_t siz)
 {
-	register char *d = dst;//register°Ñ±äÁ¿·Åµ½cpu¼Ä´æÆ÷ÖĞ£¬Ìá¸ß·ÃÎÊËÙ¶È
+	register char *d = dst;//registeræŠŠå˜é‡æ”¾åˆ°cpuå¯„å­˜å™¨ä¸­ï¼Œæé«˜è®¿é—®é€Ÿåº¦
 	register const char *s = src;
 	register size_t n = siz;
 

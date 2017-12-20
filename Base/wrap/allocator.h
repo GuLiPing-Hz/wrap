@@ -1,4 +1,4 @@
-#ifndef ALLOCATOR_H___
+ï»¿#ifndef ALLOCATOR_H___
 #define ALLOCATOR_H___
 
 #include "config.h"
@@ -7,7 +7,7 @@
 #include <assert.h>
 
 namespace Wrap{
-	//ÄÚ´æ·ÖÅä¹ÜÀíÆ÷
+	//å†…å­˜åˆ†é…ç®¡ç†å™¨
 	class Allocator{
 	public:
 		struct LeakPosition{
@@ -19,7 +19,7 @@ namespace Wrap{
 	private:
 		Allocator(){}
 		virtual ~Allocator(){
-			assert(mPointerMap.size() == 0);//Òì³£µÄ»°£¬ÄÚ´æĞ¹Â©ÁË¡£¡£
+			assert(mPointerMap.size() == 0);//å¼‚å¸¸çš„è¯ï¼Œå†…å­˜æ³„æ¼äº†ã€‚ã€‚
 
 			std::map<void*, LeakPosition>::iterator it = mPointerMap.begin();
 			for (it; it != mPointerMap.end(); it++){
@@ -30,7 +30,7 @@ namespace Wrap{
 	public:
 
 		/*
-		@size  ÆÚÍû·ÖÅäµÄÄÚ´æ´óĞ¡
+		@size  æœŸæœ›åˆ†é…çš„å†…å­˜å¤§å°
 		*/
 		virtual void* alloc(size_t size, const char* file, long line){
 			void* pointer = calloc(1, size);
@@ -75,14 +75,14 @@ namespace Wrap{
 	Wrap::Allocator::GetInstance()->dealloc((void*)M_o);\
 	M_o = NULL
 
-//Í¨ÓÃ¶ÔÏóµÄ new_ºÍdelete_£¬¿ÉÒÔ²»ÓÃ¼Ì³ĞObject,Ò»¸ö±Õ°üÖ»ĞèÉêÃ÷Ò»´Î¼´¿É
+//é€šç”¨å¯¹è±¡çš„ new_å’Œdelete_ï¼Œå¯ä»¥ä¸ç”¨ç»§æ‰¿Object,ä¸€ä¸ªé—­åŒ…åªéœ€ç”³æ˜ä¸€æ¬¡å³å¯
 #define wrap_new_begin void* M_temp = NULL
-//ÔÚÊ¹ÓÃnewÖ®Ç°£¬ÇëÉêÃ÷new_begin;
+//åœ¨ä½¿ç”¨newä¹‹å‰ï¼Œè¯·ç”³æ˜new_begin;
 #define wrap_new(M_T,...) \
 	(M_temp = Wrap::Allocator::GetInstance()->alloc(sizeof(M_T), __FILE__, __LINE__)) == NULL ? NULL : new (M_temp)M_T(__VA_ARGS__)
 
-//ÊÍ·Å¶ÔÏó,Èç¹ûÓĞnamespace£¬ÄÇÃ´´«µİM_TµÄÊ±ºò¿ÉÒÔÈ¥µô
-//»¹ÓĞ¾ÍÊÇ×îºÃ°ÑÎö¹¹º¯ÊıĞ´³ÉĞéÎö¹¹,·ñÔò×ÓÀàµÄÎö¹¹º¯Êı½«ÎŞ·¨Ö´ĞĞ
+//é‡Šæ”¾å¯¹è±¡,å¦‚æœæœ‰namespaceï¼Œé‚£ä¹ˆä¼ é€’M_Tçš„æ—¶å€™å¯ä»¥å»æ‰
+//è¿˜æœ‰å°±æ˜¯æœ€å¥½æŠŠææ„å‡½æ•°å†™æˆè™šææ„,å¦åˆ™å­ç±»çš„ææ„å‡½æ•°å°†æ— æ³•æ‰§è¡Œ
 #define wrap_delete(M_T,M_o) \
 	if (M_o != NULL){\
 	M_o->~M_T();\

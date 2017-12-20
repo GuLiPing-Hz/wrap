@@ -1,10 +1,10 @@
-#ifndef FUNCS_H___
+ï»¿#ifndef FUNCS_H___
 #define FUNCS_H___
 
 #include <string>
 
 /************************************************************************/
-/* ×Ö½ÚĞòÅĞ¶Ï£¬ÊµÏÖ´ó¶ËĞ¡¶ËÅÅĞò                                                                     */
+/* å­—èŠ‚åºåˆ¤æ–­ï¼Œå®ç°å¤§ç«¯å°ç«¯æ’åº                                                                     */
 /************************************************************************/
 
 /* little endian */
@@ -38,7 +38,7 @@ evutil_weakrand_range_(unsigned int *state, int top);
 size_t StrLCpy(char *dst, const char *src, size_t siz);
 #define STR_CPY(dst,src) StrLCpy(dst,src,sizeof(dst))
 
-//´òÓ¡ÃÜÎÄ£¬Í¨¹ı16½øÖÆµÄ·½Ê½´òÓ¡
+//æ‰“å°å¯†æ–‡ï¼Œé€šè¿‡16è¿›åˆ¶çš„æ–¹å¼æ‰“å°
 void LogCiphertext(const unsigned char* ciphertext, size_t len);
 
 const char* ByteString(const char *msg, const unsigned int len);
@@ -48,7 +48,7 @@ const char* ByteString(const char *msg, const unsigned int len);
 // such as the delivery of a signal on Unix.
 void SleepMs(int msecs);
 
-//Òì»ò¼òµ¥¼ÓÃÜËã
+//å¼‚æˆ–ç®€å•åŠ å¯†ç®—
 std::string XorString(const char *data, int datalen, const char *key, int len);
 
 
