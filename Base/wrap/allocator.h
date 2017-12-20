@@ -1,4 +1,4 @@
-#ifndef ALLOCATOR_H___
+﻿#ifndef ALLOCATOR_H___
 #define ALLOCATOR_H___
 
 #include "config.h"

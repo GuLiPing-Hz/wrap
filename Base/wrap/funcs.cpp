@@ -1,4 +1,4 @@
-#include "funcs.h"
+﻿#include "funcs.h"
 #include <stdio.h>
 #include "config.h"
 #include "pool.h"
