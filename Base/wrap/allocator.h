@@ -5,6 +5,7 @@
 #include "funcs.h"
 #include <map>
 #include <assert.h>
+#include "mutex.h"
 
 namespace Wrap{
 	//内存分配管理器
@@ -19,6 +20,7 @@ namespace Wrap{
 	private:
 		Allocator(){}
 		virtual ~Allocator(){
+			Guard lock(mMutex);
 			assert(mPointerMap.size() == 0);//异常的话，内存泄漏了。。
 
 			std::map<void*, LeakPosition>::iterator it = mPointerMap.begin();
@@ -33,6 +35,7 @@ namespace Wrap{
 		@size  期望分配的内存大小
 		*/
 		virtual void* alloc(size_t size, const char* file, long line){
+			Guard lock(mMutex);
 			void* pointer = calloc(1, size);
 			//LOGD("alloc mem pointer = %p,size = %d", pointer, size);
 
@@ -44,6 +47,7 @@ namespace Wrap{
 			return pointer;
 		}
 		virtual void dealloc(void* pointer){
+			Guard lock(mMutex);
 			if (pointer != NULL){
 				//LOGD("dealloc mem pointer = %p", pointer);
 				mPointerMap.erase(pointer);
@@ -65,6 +69,7 @@ namespace Wrap{
 	private:
 		static Allocator* sIns;
 		std::map<void*,LeakPosition> mPointerMap;
+		Mutex mMutex;
 	};
 }
 
