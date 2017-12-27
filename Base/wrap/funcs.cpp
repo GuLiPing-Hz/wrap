@@ -1,5 +1,8 @@
 ﻿#include "funcs.h"
 #include "config.h"
+#include <sstream>
+#include <time.h>
+#include <stdint.h>
 #include "pool.h"
 
 #ifdef _WIN32
@@ -10,8 +13,6 @@
 #include <unistd.h>
 
 #endif
-
-#include <sstream>
 
 Wrap::Allocator *Wrap::Allocator::sIns = NULL;
 Wrap::PoolMgr *Wrap::PoolMgr::sIns = NULL;
