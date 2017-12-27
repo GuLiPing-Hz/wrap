@@ -189,10 +189,11 @@ void LogCiphertext(const unsigned char *ciphertext, size_t len) {
     size_t pos = 0;
     while (pos < len) {
         char buf[10] = {0};
-        sprintf(buf, "%x-", ciphertext[pos] & 0xff);
+        sprintf(buf, "%02x-", ciphertext[pos] & 0xff);
         ss << buf;
         pos++;
     }
+	ss << std::endl;
     PrintConsole(ss.str().c_str());
 }
 
