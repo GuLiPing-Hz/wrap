@@ -221,10 +221,8 @@ void SleepMs(int msecs) {
 #endif
 }
 
-
 std::string XorString(const char *data, int datalen, const char *key, int len) {
-    char *pBuf = (char *) wrap_calloc(datalen);
-    Wrap::VoidGuard guard(pBuf);
+    char *pBuf = new char[datalen];
     if (!pBuf)
         return "oom";
 
@@ -233,6 +231,8 @@ std::string XorString(const char *data, int datalen, const char *key, int len) {
     }
 
     std::string ret(pBuf, datalen);
+	delete pBuf;
+
     return ret;
 }
 
