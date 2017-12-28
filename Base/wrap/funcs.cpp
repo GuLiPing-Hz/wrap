@@ -93,8 +93,9 @@ void Printf(int level, const char *file, long line, const char *format, ...) {
 }
 
 bool doendian(int c) {    // 0x12345678
-    // 12 34 56 78 大端字节序
-    // 78 56 34 12 小端字节序
+	// 低地址 - > 高地址
+    //		12 34 56 78		大端字节序  -- 内存低地址保存数据的高字节
+    //		78 56 34 12		小端字节序 -- 内存低地址保存数据的低字节
     int x = 1;//0x00000001
     int e = *(char *) &x;
     if (c == OP_LITTLEENDIAN) return !e;//当前使用小端格式，本机字节码是大端的 1
