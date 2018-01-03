@@ -411,6 +411,12 @@
     <ClInclude Include="..\Base\zlib\zutil.h">
       <Filter>zlib</Filter>
     </ClInclude>
+    <ClInclude Include="..\Base\crypto\base64.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\crypto\rsa.h">
+      <Filter>crypto</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Base.cpp">
@@ -577,6 +583,15 @@
     </ClCompile>
     <ClCompile Include="..\Base\zlib\crc32.c">
       <Filter>zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\crypto\base64_test.c">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\crypto\base64.c">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Base\crypto\rsa.c">
+      <Filter>crypto</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
