@@ -7,7 +7,7 @@
 #ifndef HTTPDOWNLOAD_H_
 #define HTTPDOWNLOAD_H_
 
-#include "config.h"
+#include "wrap_config.h"
 #include "client_socket.h"
 #include "timer.h"
 #include "http_downtype.h"

@@ -12,7 +12,7 @@
 #include <pthread.h>
 #endif // WIN32
 
-#include "../config.h"
+#include "../wrap_config.h"
 #include "../mutex.h"
 #include "../typedefs.h"
 #include "event.h"

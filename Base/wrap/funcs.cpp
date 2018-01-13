@@ -1,5 +1,5 @@
 ﻿#include "funcs.h"
-#include "config.h"
+#include "wrap_config.h"
 #include <sstream>
 #include <time.h>
 #include <stdint.h>

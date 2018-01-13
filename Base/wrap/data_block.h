@@ -3,7 +3,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include "config.h"
+#include "wrap_config.h"
 #include "pool.h"
 
 /*

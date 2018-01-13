@@ -103,7 +103,7 @@
     <ClInclude Include="..\Base\wrap\allocator.h" />
     <ClInclude Include="..\Base\wrap\buffer_value.h" />
     <ClInclude Include="..\Base\wrap\client_socket.h" />
-    <ClInclude Include="..\Base\wrap\config.h" />
+    <ClInclude Include="..\Base\wrap\wrap_config.h" />
     <ClInclude Include="..\Base\wrap\counter.h" />
     <ClInclude Include="..\Base\wrap\data_block.h" />
     <ClInclude Include="..\Base\wrap\data_decoder.h" />

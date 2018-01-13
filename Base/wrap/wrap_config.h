@@ -57,7 +57,7 @@
 #endif
 
 // win32
-#if defined(_WIN32) && defined(_WINDOWS)
+#if defined(_WIN32) || defined(_WIN64)
 #undef  CFG_TARGET_PLATFORM
 #define CFG_TARGET_PLATFORM         CC_PLATFORM_WIN32
 #endif

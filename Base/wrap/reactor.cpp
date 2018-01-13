@@ -1,9 +1,9 @@
 ﻿#include "reactor.h"
 #include "mutex.h"
 #include "funcs.h"
-#include "config.h"
+#include "wrap_config.h"
 
-#include "config.h"
+#include "wrap_config.h"
 
 namespace Wrap
 {

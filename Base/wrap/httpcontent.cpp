@@ -20,7 +20,7 @@
  *
  ***************************************************************************/
 #include "httpcontent.h"
-#include "config.h"
+#include "wrap_config.h"
 #include <stdlib.h>
 #include "http_download.h"
 

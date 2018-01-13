@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "config.h"
+#include "wrap_config.h"
 
 #define SAVE_BUF_SIZE			1048576/*1024 * 1024*/   // 接收缓冲区大小
 

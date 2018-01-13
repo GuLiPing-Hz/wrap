@@ -2,7 +2,7 @@
 #define MUTEX_H___
 
 #include <mutex>
-#include "config.h"
+#include "wrap_config.h"
 
 namespace Wrap{
 

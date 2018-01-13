@@ -14,7 +14,7 @@
 #ifndef WEBRTC_TYPEDEFS_H_
 #define WEBRTC_TYPEDEFS_H_
 
-#include "config.h"
+#include "wrap_config.h"
 
 // For access to standard POSIXish features, use WEBRTC_POSIX instead of a
 // more specific macro.

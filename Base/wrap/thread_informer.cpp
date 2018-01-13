@@ -1,4 +1,4 @@
-﻿#include "config.h"
+﻿#include "wrap_config.h"
 #include "thread_informer.h"
 #include "ext/event.h"
 #include <assert.h>

@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-#include "../wrap/config.h"
+#include "../wrap/wrap_config.h"
 
 #ifndef COCOS_PROJECT
 

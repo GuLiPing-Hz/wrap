@@ -5,7 +5,7 @@
 #ifndef UNZIP__H__
 #define UNZIP__H__
 
-#include "config.h"
+#include "wrap_config.h"
 
 #ifndef COCOS_PROJECT
 #include "../zip/unzip.h"

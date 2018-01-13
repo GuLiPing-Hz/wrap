@@ -31,7 +31,7 @@ typedef int SOCKET;
 #endif
 
 #include <time.h>
-#include "config.h"
+#include "wrap_config.h"
 
 namespace Wrap
 {

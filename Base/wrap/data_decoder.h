@@ -10,7 +10,7 @@
 
 
 #include <stdio.h>
-#include "config.h"
+#include "wrap_config.h"
 
 //定义 包解析的接口
 namespace Wrap {

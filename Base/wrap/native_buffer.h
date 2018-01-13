@@ -5,7 +5,7 @@
 #include <vector>
 #include "data_block.h"
 #include "funcs.h"
-#include "config.h"
+#include "wrap_config.h"
 
 #ifdef COCOS_PROJECT
 #include "cocos2d.h"

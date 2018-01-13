@@ -1,4 +1,4 @@
-﻿#include "../config.h"
+﻿#include "../wrap_config.h"
 #include "event.h"
 #include "thread.h"
 #include "../pool.h"

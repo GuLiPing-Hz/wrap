@@ -1,7 +1,7 @@
 ﻿#ifndef ALLOCATOR_H___
 #define ALLOCATOR_H___
 
-#include "config.h"
+#include "wrap_config.h"
 #include "funcs.h"
 #include <map>
 #include <assert.h>

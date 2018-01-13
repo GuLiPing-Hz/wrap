@@ -297,9 +297,6 @@
     <ClInclude Include="..\Base\wrap\client_socket.h">
       <Filter>wrap</Filter>
     </ClInclude>
-    <ClInclude Include="..\Base\wrap\config.h">
-      <Filter>wrap</Filter>
-    </ClInclude>
     <ClInclude Include="..\Base\wrap\counter.h">
       <Filter>wrap</Filter>
     </ClInclude>
@@ -416,6 +413,9 @@
     </ClInclude>
     <ClInclude Include="..\Base\crypto\rsa.h">
       <Filter>crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Base\wrap\wrap_config.h">
+      <Filter>wrap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

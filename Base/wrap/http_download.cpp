@@ -27,7 +27,7 @@
 #include <assert.h>
 #include "file_mgr.h"
 
-#include "config.h"
+#include "wrap_config.h"
 
 #define PER_RECV_BUF_SIZE			65535/*1024 * 25*/   // 接收缓冲区大小
 #define TRY_MAX_TIMES 3
