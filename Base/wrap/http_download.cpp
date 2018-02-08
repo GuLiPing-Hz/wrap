@@ -276,8 +276,8 @@ void CHttpDownload::onFDRead()
 
 	if (len == 0)
 	{
-		closeSocket();
 		onSocketClose();
+		closeSocket();
 		return;
 	}
 
@@ -288,15 +288,15 @@ void CHttpDownload::onFDRead()
 		DWORD derrno = GetLastError();
 		if (derrno != WSAEWOULDBLOCK)
 		{
-			closeSocket();
 			onSocketRecvError(derrno);
+			closeSocket();
 		}
 #else//Linux
 		int errorcode = errno;
 		if(errorcode!=EAGAIN)
 		{
-			closeSocket();
 			onSocketRecvError(errorcode);
+			closeSocket();
 		}
 #endif
 		return;
@@ -304,8 +304,8 @@ void CHttpDownload::onFDRead()
 
 	if (getRB()->append(buf,len) != len)
 	{
-		closeSocket();
 		onNetLevelError(EC_RECV_BUFFER);
+		closeSocket();
 		return;
 	}
 

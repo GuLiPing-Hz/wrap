@@ -3,12 +3,13 @@
 
 namespace Wrap {
     void ClientSocketBase::onFDRead() {
+		//LOGI("%s", __FUNCTION__);
         char buf[65535] = {0};/* 16*1024 */
         int len = (int) ::recv(mFD, buf, sizeof(buf), 0);//接收网络数据
 		
         if (len == 0) {
-            closeSocket();
             onSocketClose();
+			closeSocket();
             return;
         }
 
@@ -17,14 +18,14 @@ namespace Wrap {
             DWORD derrno = GetLastError();
             if (derrno != WSAEWOULDBLOCK)
             {
-                closeSocket();
                 onSocketRecvError(derrno);
+				closeSocket();
             }
 #else//Linux
             int errorcode = errno;
             if (errorcode != EAGAIN) {
-                closeSocket();
                 onSocketRecvError(errorcode);
+				closeSocket();
             }
 #endif
             return;
@@ -34,14 +35,14 @@ namespace Wrap {
             return;
 
         if (mRecvdata.append(buf, len) != len) {
-            closeSocket();
             onNetLevelError(EC_RECV_BUFFER);
+			closeSocket();
             return;
         }
         //解析网络数据，不足一个包的部分会有相应处理
         if (mDecoder->process(this) < 0) {
-            closeSocket();
             onNetLevelError(EC_STREAM);
+			closeSocket();
             return;
         }
     }
@@ -56,13 +57,13 @@ namespace Wrap {
             DWORD derrno = GetLastError();
             if( derrno != WSAEWOULDBLOCK )
             {
-                closeSocket();
                 onSocketSendError(derrno);
+				closeSocket();
             }
 #else//Linux
             if (errno != EAGAIN) {
-                closeSocket();
                 onSocketSendError(errno);
+				closeSocket();
             }
 #endif
             return;

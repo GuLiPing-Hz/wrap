@@ -51,34 +51,35 @@ namespace Wrap
 		if (setsockopt(mFD, SOL_SOCKET, SO_SNDBUF, (char *)&nBuffLen, sizeof(int)) == SOCKET_ERROR)
 			return -1;
 
-#ifdef WIN32
-		BOOL bKeepAlive = TRUE;
-		int nRet = setsockopt(mFD, SOL_SOCKET, SO_KEEPALIVE, (char*)&bKeepAlive, sizeof(bKeepAlive));
-		// 设置KeepAlive参数
-		tcp_keepalive alive_in = { 0 };
-		tcp_keepalive alive_out = { 0 };
-		alive_in.keepalivetime = 1000;                // //单位为毫秒 开始首次KeepAlive探测前的TCP空闭时间
-		alive_in.keepaliveinterval = 1000;            // //单位为毫秒 两次KeepAlive探测间的时间间隔
-		alive_in.onoff = TRUE;
-		unsigned long ulBytesReturn = 0;
-		nRet = WSAIoctl(mFD, SIO_KEEPALIVE_VALS, &alive_in, sizeof(alive_in),
-			&alive_out, sizeof(alive_out), &ulBytesReturn, NULL, NULL);
-#else
-		int keepAlive = 1;   // 开启keepalive属性. 缺省值: 0(关闭)
-		int keepIdle = 1;   // 如果在60秒内没有任何数据交互,则进行探测. 缺省值:7200(s)
-		int keepInterval = 1;   // 探测时发探测包的时间间隔为5秒. 缺省值:75(s)
-		int keepCount = 2;   // 探测重试的次数. 全部超时则认定连接失效..缺省值:9(次)
 
-		setsockopt(mFD, SOL_SOCKET, SO_KEEPALIVE, (void*)&keepAlive, sizeof(keepAlive));
+#ifdef WIN32
+// 		BOOL bKeepAlive = TRUE;
+// 		int nRet = setsockopt(mFD, SOL_SOCKET, SO_KEEPALIVE, (char*)&bKeepAlive, sizeof(bKeepAlive));
+// 		// 设置KeepAlive参数
+// 		tcp_keepalive alive_in = { 0 };
+// 		tcp_keepalive alive_out = { 0 };
+// 		alive_in.keepalivetime = 1000;                // //单位为毫秒 开始首次KeepAlive探测前的TCP空闭时间
+// 		alive_in.keepaliveinterval = 1000;            // //单位为毫秒 两次KeepAlive探测间的时间间隔
+// 		alive_in.onoff = TRUE;
+// 		unsigned long ulBytesReturn = 0;
+// 		nRet = WSAIoctl(mFD, SIO_KEEPALIVE_VALS, &alive_in, sizeof(alive_in),
+// 			&alive_out, sizeof(alive_out), &ulBytesReturn, NULL, NULL);
+#else
+// 		int keepAlive = 1;   // 开启keepalive属性. 缺省值: 0(关闭)
+// 		int keepIdle = 1;   // 如果在60秒内没有任何数据交互,则进行探测. 缺省值:7200(s)
+// 		int keepInterval = 1;   // 探测时发探测包的时间间隔为5秒. 缺省值:75(s)
+// 		int keepCount = 2;   // 探测重试的次数. 全部超时则认定连接失效..缺省值:9(次)
+// 
+// 		setsockopt(mFD, SOL_SOCKET, SO_KEEPALIVE, (void*)&keepAlive, sizeof(keepAlive));
 #if defined ANDROID
 		//SOL_TCP
-		setsockopt(mFD, SOL_TCP, TCP_KEEPIDLE, (void*)&keepIdle, sizeof(keepIdle));
-		setsockopt(mFD, SOL_TCP, TCP_KEEPINTVL, (void*)&keepInterval, sizeof(keepInterval));
-		setsockopt(mFD, SOL_TCP, TCP_KEEPCNT, (void*)&keepCount, sizeof(keepCount));
+// 		setsockopt(mFD, SOL_TCP, TCP_KEEPIDLE, (void*)&keepIdle, sizeof(keepIdle));
+// 		setsockopt(mFD, SOL_TCP, TCP_KEEPINTVL, (void*)&keepInterval, sizeof(keepInterval));
+// 		setsockopt(mFD, SOL_TCP, TCP_KEEPCNT, (void*)&keepCount, sizeof(keepCount));
 #else //Apple
-		setsockopt(mFD, IPPROTO_TCP, TCP_KEEPALIVE, (void*)&keepIdle, sizeof(keepIdle));
-		setsockopt(mFD, IPPROTO_TCP, TCP_KEEPINTVL, (void*)&keepInterval, sizeof(keepInterval));
-		setsockopt(mFD, IPPROTO_TCP, TCP_KEEPCNT, (void*)&keepCount, sizeof(keepCount));
+// 		setsockopt(mFD, IPPROTO_TCP, TCP_KEEPALIVE, (void*)&keepIdle, sizeof(keepIdle));
+// 		setsockopt(mFD, IPPROTO_TCP, TCP_KEEPINTVL, (void*)&keepInterval, sizeof(keepInterval));
+// 		setsockopt(mFD, IPPROTO_TCP, TCP_KEEPCNT, (void*)&keepCount, sizeof(keepCount));
 
 		//设置不发送 `SIGPIPE` 信号的 socket 变量
 		int value = 1;

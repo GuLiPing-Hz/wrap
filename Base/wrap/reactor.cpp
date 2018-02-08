@@ -3,8 +3,6 @@
 #include "funcs.h"
 #include "wrap_config.h"
 
-#include "wrap_config.h"
-
 namespace Wrap
 {
 //////////////////////////EventHandlerSet 的实现////////////////////////////////////////////////

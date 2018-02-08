@@ -24,7 +24,8 @@ namespace Wrap{
 
 	enum eMsgInformer
 	{
-		MSG_SEND_DATA = MSG_INVALID + 1,
+		MSG_CLEAR_DATA = MSG_INVALID + 1,
+		MSG_SEND_DATA = MSG_INVALID + 2,
 	};
 
 	struct MSGINFO{
@@ -74,6 +75,8 @@ namespace Wrap{
 		virtual void processMessage(int id, void* pData){};
 		virtual void processIdle();
 
+		//在连接服务器的时候，我们必须要清空之前的已经发送给服务器的等待消息，否则后续会报错
+		void clearCurWaitMsg();
 	protected:
 		//处理 > MSG_SEND_DATA 的消息 msg.v 无需做处理
 		virtual void dealCustomMsg(MSGINFO* msg){}
@@ -126,6 +129,7 @@ namespace Wrap{
 			}
 			return -1;
 		}
+		
 		int sendToSvr(ClientSocket* pSvr, const char* buf, int len){
 			if (pSvr && !pSvr->isConnected())
 				return -1;
@@ -138,6 +142,8 @@ namespace Wrap{
 		//对数据进行处理
 		virtual void onTimeoutData(ReserveData* data) = 0;
 
+		void clearMessage();
+
 		virtual void addTimeout(bool success, MSGINFO* msg);
 
 		virtual void onTimeOut();
@@ -147,8 +153,11 @@ namespace Wrap{
 		void destroyReserveData(ReserveData *pRD);
 
 	protected:
+		//待请求服务器消息列表
 		std::list<Wrap::MSGINFO> m_requestlist;
 		Mutex mMutex;
+
+		//本身保存的是已经向服务器发送的消息列表
 	};
 
 	class ReserveData

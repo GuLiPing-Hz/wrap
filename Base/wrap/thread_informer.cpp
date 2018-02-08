@@ -67,6 +67,12 @@ namespace Wrap{
 #endif//TEST_UDP
 	}
 
+	void ThreadInformer::clearCurWaitMsg() {
+		if (mMsgCenter) {
+			mMsgCenter->clearMessage();
+		}
+	}
+
 	void ThreadInformer::processIdle()
 	{
 		// 		LOGI("%s : wait for", __FUNCTION__);
@@ -116,6 +122,12 @@ namespace Wrap{
 				}
 			}
 		}
+	}
+
+	void MessageCenter::clearMessage() {
+		Guard lock(mMutex);
+		m_requestlist.clear();////清空等待发送请求的消息
+		clear();//清空已经发送想消息列表
 	}
 
 	void MessageCenter::addTimeout(bool success, MSGINFO* msg){
