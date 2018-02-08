@@ -27,6 +27,7 @@
 
 -(void)doFor:(int)payWay withUrlOrGoodId:(NSString*)param withSuccess:(NSString*)success withFail:(NSString*)fail;
 -(void)goH5:(NSString*)url;
+-(BOOL)sendImgToWX:(NSString*)path withIsPYQ:(BOOL)isPYQ;
 
 @end
 
@@ -39,14 +40,20 @@
 +(void)saveUUIDToKeyChain;
 +(NSString *)readUUIDFromKeyChain;
 +(NSString *)getUUIDString;
+//压缩图片不超过maxLength大小
++ (UIImage *)compressImage:(UIImage *)image toByte:(NSUInteger)maxLength;
+//缩小图片的尺寸
++ (UIImage *)scaleImage:(UIImage*)image scaledToSize:(CGSize)newSize;
 
 +(void)registerVisiter:(id<ProtocolVisitUrl>)visiter;
-+(void)registerMob;
 //调用静态方法
 +(NSString*)callNativeFromJs:(NSString*)method withParam:(NSString*)param;
 
 +(void)setPayResult:(int)code;
 +(void)setPayResultFail:(NSString*)reason;
 +(void)setPayResultSuccess:(NSString*)productId withReceipt:(NSString*)receipt;
++(void)setWXShareResult:(int)code;
 
++(void)saveOrientation:(NSString*)orientation;
++(void)setOrientation:(NSString*)orientation;
 @end

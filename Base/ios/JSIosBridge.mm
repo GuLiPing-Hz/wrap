@@ -11,6 +11,8 @@
 #import  <Security/Security.h>
 #import "KeychainItemWrapper.h"
 #import <SMS_SDK/SMSSDK.h>
+#import <UMAnalytics/MobClickGameAnalytics.h>
+#import "UMPush/UMessage.h"
 #import "Reachability.h"
 #include "simple_util_bridge_JsIOSBridge.h"
 #include <string.h>
@@ -34,21 +36,37 @@
 #define JS_2_NATIVE_GET_UUID  @"GET_UUID"
 //获取手机型号
 #define JS_2_NATIVE_GET_PHONEMODEL  @"GET_PHONEMODEL"
+#define JS_2_NATIVE_GET_DEVICE @"GET_DEVICE"
 //获取产品渠道，android获取渠道，ios获取bundle id
 #define JS_2_NATIVE_GET_FLAVOR  @"GET_FLAVOR"
+//获取当前的屏幕方向
+#define JS_2_NATIVE_GET_ORIENTATION @"GET_ORIENTATION"
+
 #define JS_2_NATIVE_PAY  @"PAY"
 #define JS_2_NATIVE_GOH5 @"GOH5"
 #define JS_2_NATIVE_LOG @"LOG"
+//分享到微信
+#define JS_2_NATIVE_SHARE_WX  @"SHARE_WX"
+
+//统计用户登录登出
+#define JS_2_NATIVE_LOG_INOUT @"LOG_INOUT"
+#define JS_2_NATIVE_LOG_PAY @"LOG_PAY"
 
 //Native Call Js
 #define NATIVE_2_JS_GET_CODE  @"CALLBACK_GET_CODE"
 #define NATIVE_2_JS_PAY_RESULT @"CALLBACK_PAY_RESULT"
+#define NATIVE_2_JS_ORIENTATION @"CALLBACK_ORIENTATION"
+#define NATIVE_2_JS_SHARERESULT  @"CALLBACK_SHARERESULT"
 
 #define Net_None  0
 #define Net_Wifi  1
 #define Net_Mobile  2
 
+#define IPHONE_X @"iPhone_X"
+
 @implementation CallNativeArg
+
+NSString* sOrientation = @"2";
 
 - (id)initWithDictionary:(NSDictionary *)dictionary {
     self = [self init];
@@ -117,6 +135,7 @@ static id<ProtocolVisitUrl> sVisiter = nullptr;
 }
 
 +(void)setPhoneModel:(NSString*)phoneModel{
+    NSLog(@"ios phoneModel = %@",phoneModel);
     strcpy(sPhoneModel,phoneModel.UTF8String);
 }
 
@@ -158,25 +177,86 @@ static id<ProtocolVisitUrl> sVisiter = nullptr;
     struct utsname systemInfo;
     uname(&systemInfo);
     NSString * deviceString = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
-    //iPhone
-    if ([deviceString isEqualToString:@"iPhone1,1"])    return @"iPhone 1G";
-    if ([deviceString isEqualToString:@"iPhone1,2"])    return @"iPhone 3G";
-    if ([deviceString isEqualToString:@"iPhone2,1"])    return @"iPhone 3GS";
-    if ([deviceString isEqualToString:@"iPhone3,1"])    return @"iPhone 4";
-    if ([deviceString isEqualToString:@"iPhone3,2"])    return @"Verizon iPhone 4";
-    if ([deviceString isEqualToString:@"iPhone4,1"])    return @"iPhone 4S";
-    if ([deviceString isEqualToString:@"iPhone5,1"])    return @"iPhone 5";
-    if ([deviceString isEqualToString:@"iPhone5,2"])    return @"iPhone 5";
-    if ([deviceString isEqualToString:@"iPhone5,3"])    return @"iPhone 5C";
-    if ([deviceString isEqualToString:@"iPhone5,4"])    return @"iPhone 5C";
-    if ([deviceString isEqualToString:@"iPhone6,1"])    return @"iPhone 5S";
-    if ([deviceString isEqualToString:@"iPhone6,2"])    return @"iPhone 5S";
-    if ([deviceString isEqualToString:@"iPhone7,1"])    return @"iPhone 6 Plus";
-    if ([deviceString isEqualToString:@"iPhone7,2"])    return @"iPhone 6";
-    if ([deviceString isEqualToString:@"iPhone8,1"])    return @"iPhone 6s";
-    if ([deviceString isEqualToString:@"iPhone8,2"])    return @"iPhone 6s Plus";
-    
+    //ios 设备型号打印一下
+    NSLog(@"ios deviceString = %@",deviceString);
     return deviceString;
+}
+
++ (UIImage *)compressImage:(UIImage *)image toByte:(NSUInteger)maxLength {
+    // Compress by quality
+    CGFloat compression = 1;
+    NSData *data = UIImageJPEGRepresentation(image, compression);
+    if (data.length < maxLength) return image;
+    
+    CGFloat max = 1;
+    CGFloat min = 0;
+    for (int i = 0; i < 6; ++i) {
+        compression = (max + min) / 2;
+        data = UIImageJPEGRepresentation(image, compression);
+        if (data.length < maxLength * 0.9) {
+            min = compression;
+        } else if (data.length > maxLength) {
+            max = compression;
+        } else {
+            break;
+        }
+    }
+    UIImage *resultImage = [UIImage imageWithData:data];
+    if (data.length < maxLength) return resultImage;
+    
+    // Compress by size
+    NSUInteger lastDataLength = 0;
+    while (data.length > maxLength && data.length != lastDataLength) {
+        lastDataLength = data.length;
+        CGFloat ratio = (CGFloat)maxLength / data.length;
+        CGSize size = CGSizeMake((NSUInteger)(resultImage.size.width * sqrtf(ratio)),
+                                 (NSUInteger)(resultImage.size.height * sqrtf(ratio))); // Use NSUInteger to prevent white blank
+        UIGraphicsBeginImageContext(size);
+        [resultImage drawInRect:CGRectMake(0, 0, size.width, size.height)];
+        resultImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        data = UIImageJPEGRepresentation(resultImage, compression);
+    }
+    
+    return resultImage;
+}
+
+// 压缩图片尺寸
++ (UIImage *)scaleImage:(UIImage*)image scaledToSize:(CGSize)newSize
+{
+    //同比例的宽高比缩放
+    int width = image.size.width;
+    int height = image.size.height;
+    float inSampleSize = 1;
+    
+    float reqWidth = newSize.width;
+    float reqHeight = newSize.height;
+    
+    if (height > reqHeight || width > reqWidth) {
+        // 计算出实际宽高和目标宽高的比率
+        float heightRatio = (float) height / reqHeight;
+        float widthRatio = (float) width / reqWidth;
+        inSampleSize = heightRatio < widthRatio ? widthRatio : heightRatio;
+    }
+    
+    // Create a graphics image context
+    NSInteger newWidth = (NSInteger)(width/inSampleSize);
+    NSInteger newHeight = (NSInteger)(height/inSampleSize);
+    UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight));
+    
+    // Tell the old image to draw in this new context, with the desired
+    // new size
+    
+    [image drawInRect:CGRectMake(0 , 0,newWidth, newHeight)];
+    
+    // Get the new image from the context
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    // End the context
+    UIGraphicsEndImageContext();
+    
+    // Return the new image.
+    return newImage;
 }
 
 // 将NSDictionary或NSArray转化为JSON字符串
@@ -205,16 +285,14 @@ static id<ProtocolVisitUrl> sVisiter = nullptr;
         return nil;
 }
 
-+(void)registerMob
-{
-    [SMSSDK registerApp:@"1eb63d197f5c7" withSecret:@"05150de50dfb7f890cf7ce5f038bbf67"];
-}
-
 //调用静态方法
 +(NSString*)callNativeFromJs:(NSString*)method withParam:(NSString*)param
 {
     //CallNativeArg ret = new CallNativeArg();
     NSMutableDictionary* ret = [[NSMutableDictionary alloc] init];
+    
+    //先设置一个错误码
+    [ret setValue:[NSNumber numberWithInt:1] forKey:RESULT_CODE];
     
     if ([method caseInsensitiveCompare: JS_2_NATIVE_GET_NET_STATUS] == NSOrderedSame) {
         NetworkStatus netStatus = [[Reachability reachabilityWithHostName:@"www.baidu.com"] currentReachabilityStatus];
@@ -238,7 +316,7 @@ static id<ProtocolVisitUrl> sVisiter = nullptr;
             NSString* curPhone = dic[RESULT_ARG0];
             NSString* curArea = dic[RESULT_ARG1];
             if(curPhone && curArea){
-                [SMSSDK getVerificationCodeByMethod:SMSGetCodeMethodSMS phoneNumber:curPhone zone:curArea customIdentifier:nil result:^(NSError *error) {
+                [SMSSDK getVerificationCodeByMethod:SMSGetCodeMethodSMS phoneNumber:curPhone zone:curArea template:nil result:^(NSError *error) {
                     NSMutableDictionary* result = [[NSMutableDictionary alloc] init];
                     [result setValue:NATIVE_2_JS_GET_CODE forKey:RESULT_METHOD];
                     if (!error)
@@ -248,9 +326,10 @@ static id<ProtocolVisitUrl> sVisiter = nullptr;
                     }
                     else
                     {// error 验证码获取错误
+                        NSLog(@"error = %@",error);
                         [result setValue:[NSNumber numberWithInt:2] forKey:RESULT_CODE];
                         [result setValue:curPhone forKey:RESULT_ARG0];
-                        [result setValue:[NSNumber numberWithUnsignedLong:error.code] forKey:RESULT_ARG1];
+                        [result setValue:[NSNumber numberWithInteger:error.code] forKey:RESULT_ARG1];
                     }
                     ios_callJsFromNative([self ObjToJSONString:result].UTF8String);
                 }];
@@ -270,7 +349,17 @@ static id<ProtocolVisitUrl> sVisiter = nullptr;
     } else if ([method caseInsensitiveCompare: JS_2_NATIVE_GET_FLAVOR] == NSOrderedSame ) {
         [ret setValue:[NSNumber numberWithInt:0] forKey:RESULT_CODE];
         [ret setValue: IOS_CHANNEL forKey:RESULT_ARG0];
-    } else if([method caseInsensitiveCompare: JS_2_NATIVE_PAY] == NSOrderedSame){
+    }else if([method caseInsensitiveCompare: JS_2_NATIVE_GET_ORIENTATION] == NSOrderedSame){
+//        UIDeviceOrientation duration = [[UIDevice currentDevice] orientation];
+//        NSString* orientation = @"0";
+//        if(duration == UIDeviceOrientationLandscapeLeft)
+//            orientation = @"2";
+//        else if(duration == UIDeviceOrientationLandscapeRight)
+//            orientation = @"1";
+        [ret setValue:[NSNumber numberWithInt:0] forKey:RESULT_CODE];
+        [ret setValue: sOrientation forKey:RESULT_ARG0];
+    }
+    else if([method caseInsensitiveCompare: JS_2_NATIVE_PAY] == NSOrderedSame){
         //将字符串写到缓冲区。
         NSData* jsonData = [param dataUsingEncoding:NSUTF8StringEncoding];
         //解析json数据，使用系统方法 JSONObjectWithData:  options: error:
@@ -304,6 +393,7 @@ static id<ProtocolVisitUrl> sVisiter = nullptr;
             NSString* url = dic[RESULT_ARG0];
             
             if(url){
+                isSuccess = true;
                 [ret setValue:[NSNumber numberWithInt:0] forKey:RESULT_CODE];
                 [sVisiter goH5:url];
             }
@@ -315,8 +405,77 @@ static id<ProtocolVisitUrl> sVisiter = nullptr;
     else if([method caseInsensitiveCompare: JS_2_NATIVE_LOG] == NSOrderedSame){
         [ret setValue:[NSNumber numberWithInt:0] forKey:RESULT_CODE];//ios 也不用打印日志
     }
-    else{
-        [ret setValue:[NSNumber numberWithInt:1] forKey:RESULT_CODE];
+    else if([method caseInsensitiveCompare: JS_2_NATIVE_LOG_INOUT] == NSOrderedSame){
+        //将字符串写到缓冲区。
+        NSData* jsonData = [param dataUsingEncoding:NSUTF8StringEncoding];
+        //解析json数据，使用系统方法 JSONObjectWithData:  options: error:
+        NSDictionary* dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableLeaves error:nil];
+        
+        if(dic){
+            NSString* isIn = dic[RESULT_ARG0];
+            if(isIn && [isIn caseInsensitiveCompare: @"1"] == NSOrderedSame){
+                NSString* uid = dic[RESULT_ARG1];
+                if(uid){
+                    [ret setValue:[NSNumber numberWithInt:0] forKey:RESULT_CODE];
+                    [MobClickGameAnalytics profileSignInWithPUID:uid];
+                    
+                    //每次登录的时候，我们都去尝试映射一下别名关系
+                    //设置用户id和device_token的一一映射关系，确保同一个alias只对应一台设备：
+                    [UMessage setAlias:uid type:IOS_CHANNEL response:^(id  _Nonnull responseObject, NSError * _Nonnull error) {
+                        //我们不关心是否成功，如果失败了，那大不了就不能推送而已，不要提示用户错误
+                        NSLog(@"setAlias responseObject: %@,error:%@",responseObject,error.localizedDescription);
+                    }];
+                }
+            } else {
+                [ret setValue:[NSNumber numberWithInt:0] forKey:RESULT_CODE];
+                [MobClickGameAnalytics profileSignOff];
+            }
+        }
+    }
+    else if([method caseInsensitiveCompare: JS_2_NATIVE_LOG_PAY] == NSOrderedSame){
+        //将字符串写到缓冲区。
+        NSData* jsonData = [param dataUsingEncoding:NSUTF8StringEncoding];
+        //解析json数据，使用系统方法 JSONObjectWithData:  options: error:
+        NSDictionary* dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableLeaves error:nil];
+        
+        if(dic){
+            NSString* money = dic[RESULT_ARG0];
+            NSString* gold = dic[RESULT_ARG1];
+            NSString* source = dic[RESULT_ARG2];
+            
+            if(money && gold && source){
+                [ret setValue:[NSNumber numberWithInt:0] forKey:RESULT_CODE];
+                [MobClickGameAnalytics pay:[money doubleValue]  source:[money intValue] coin:[money doubleValue]];
+            }
+        }
+    }
+    else if([method caseInsensitiveCompare: JS_2_NATIVE_SHARE_WX] == NSOrderedSame){
+        //将字符串写到缓冲区。
+        NSData* jsonData = [param dataUsingEncoding:NSUTF8StringEncoding];
+        //解析json数据，使用系统方法 JSONObjectWithData:  options: error:
+        NSDictionary* dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableLeaves error:nil];
+        
+        bool isSuccess = false;
+        if(dic && sVisiter){
+            NSString* path = dic[RESULT_ARG0];
+            NSString* sIsPYQ = dic[RESULT_ARG1];
+            BOOL isPYQ = [sIsPYQ caseInsensitiveCompare:@"1"] == NSOrderedSame;
+            
+            if(path && [sVisiter sendImgToWX:path withIsPYQ:isPYQ]){
+                isSuccess = true;
+                [ret setValue:[NSNumber numberWithInt:0] forKey:RESULT_CODE];
+            }
+        }
+        
+        if(!isSuccess)
+            [ret setValue:[NSNumber numberWithInt:1] forKey:RESULT_CODE];
+    }
+    else if([method caseInsensitiveCompare: JS_2_NATIVE_GET_DEVICE] == NSOrderedSame){
+        [ret setValue:[NSNumber numberWithInt:0] forKey:RESULT_CODE];
+        [ret setValue: [JSIosBridge deviceVersion] forKey:RESULT_ARG0];
+        
+        //for debug 调试模拟器,,,,模拟器获取出来的设备都是x86_64
+        //[ret setValue: @"iPhone10,3" forKey:RESULT_ARG0];
     }
     
     return [self ObjToJSONString:ret];
@@ -330,9 +489,9 @@ static id<ProtocolVisitUrl> sVisiter = nullptr;
     {// 请求成功
         [result setValue:[NSNumber numberWithInt:0] forKey:RESULT_CODE];
     }
-    else if(code == 2)
+    else if(code == 2 || (code >= 5 && code <=8))
     {// 取消
-        [result setValue:[NSNumber numberWithInt:2] forKey:RESULT_CODE];
+        [result setValue:[NSNumber numberWithInt:code] forKey:RESULT_CODE];
     }else{
         return ;
     }
@@ -355,6 +514,27 @@ static id<ProtocolVisitUrl> sVisiter = nullptr;
     [result setValue:[NSNumber numberWithInt:4] forKey:RESULT_CODE];
     [result setValue:productId forKey:RESULT_ARG0];
     [result setValue:receipt forKey:RESULT_ARG1];
+    ios_callJsFromNative([self ObjToJSONString:result].UTF8String);
+}
+
++(void)setWXShareResult:(int)code
+{
+    NSMutableDictionary* result = [[NSMutableDictionary alloc] init];
+    [result setValue:NATIVE_2_JS_SHARERESULT forKey:RESULT_METHOD];
+    [result setValue:[NSNumber numberWithInt:code] forKey:RESULT_CODE];
+    ios_callJsFromNative([self ObjToJSONString:result].UTF8String);
+}
+
++(void)saveOrientation:(NSString*)orientation
+{
+    sOrientation = orientation;
+}
+
++(void)setOrientation:(NSString*)orientation
+{
+    NSMutableDictionary* result = [[NSMutableDictionary alloc] init];
+    [result setValue:NATIVE_2_JS_ORIENTATION forKey:RESULT_METHOD];
+    [result setValue:orientation forKey:RESULT_ARG0];
     ios_callJsFromNative([self ObjToJSONString:result].UTF8String);
 }
 
