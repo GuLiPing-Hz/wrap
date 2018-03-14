@@ -40,9 +40,9 @@ namespace Wrap {
 	}DownloadState;
 
 	//URL Encode
-	static std::string UrlEncode(const std::string& szToEncode);
+	std::string UrlEncode(const std::string& szToEncode);
 	//URL Decode
-	static std::string UrlDecode(const std::string& szToDecode);
+	std::string UrlDecode(const std::string& szToDecode);
 
 	class Reactor;
 	class CHttpDownloadMgr;
