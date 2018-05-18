@@ -1,4 +1,4 @@
-﻿#include "funcs.h"
+#include "funcs.h"
 #include "wrap_config.h"
 #include <sstream>
 #include <time.h>
@@ -66,23 +66,23 @@ void Printf(int level, const char *file, long line, const char *format, ...) {
     vsprintf(buf, format, args);
     va_end(args);
 
-    std::stringstream os;
-    os << "[" << gLogStr[level] << "]" << file << "_" << line << " : " << buf << std::endl;
+    static char timeLog[1024] = {0};
+    time_t timep;
+    struct tm *p;
+    time(&timep);
+    p = gmtime(&timep); /* 获取当前时间 */
+    sprintf(timeLog, "%02d:%02d:%02d %lld", (p->tm_hour + 8), p->tm_min, p->tm_sec, timep);
+    
+    std::stringstream os;//file
+    os << "[" << gLogStr[level] << "]" << timeLog << "_" << line << " : " << buf << std::endl;
 
     if (!sPath.empty()) {//是否已经指定写入文件
-        static char timeBuf[260];
-        time_t timep;
-        struct tm *p;
-        time(&timep);
-        p = gmtime(&timep); /* 获取当前时间 */
+        static char timeBuf[260] = {0};/* 获取当前时间 */
         sprintf(timeBuf, "%s_%02d-%02d.log", sPath.c_str(), (1 + p->tm_mon), p->tm_mday);
 
         FILE *fp = fopen(timeBuf, "ab");
         if (fp != NULL) {
-            sprintf(timeBuf, "%04d-%02d-%02d,%02d:%02d:%02d %lld", (1900 + p->tm_year),
-                    (1 + p->tm_mon), p->tm_mday, (p->tm_hour + 8), p->tm_min, p->tm_sec, timep);
-
-            fprintf(fp, "[%s]%s", timeBuf, os.str().c_str());
+            fprintf(fp, "[%s]%s", timeLog, os.str().c_str());
             fflush(fp);
             fclose(fp);
             return;

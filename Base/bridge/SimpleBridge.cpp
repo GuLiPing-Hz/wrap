@@ -1,4 +1,4 @@
-﻿#include "SimpleBridge.h"
+#include "SimpleBridge.h"
 #include "../LongConnection.h"
 #include "../protocol.h"
 #include <memory>
@@ -301,6 +301,8 @@ MethodParam SimpleBridge::removeSeq(const int seq) {
 
 int SimpleBridge::callByNative(const std::string &param) {
     int ret = 0;
+    //LOGD("%s param=%s",__FUNCTION__,param.c_str());
+    
     rapidjson::Document doc;
     //rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator> &allocator = doc.GetAllocator();
     rapidjson::Value root(rapidjson::kObjectType);
