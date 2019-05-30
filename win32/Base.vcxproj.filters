@@ -593,5 +593,11 @@
     <ClCompile Include="..\Base\crypto\rsa.c">
       <Filter>crypto</Filter>
     </ClCompile>
+    <ClCompile Include="testServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="testClient.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

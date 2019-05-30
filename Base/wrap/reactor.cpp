@@ -224,8 +224,12 @@ namespace Wrap
 #endif
 			}
 
-			if(!mIsRunning && nfds <= 0)
-				break;
+			if (nfds <= 0) {
+				if (!mIsRunning)
+					break;
+				else
+					SleepMs(50);//发生错误，我们不要把cpu吃满。。。
+			}
 
             MAPSOCKETFDH::iterator it = tmpFDMap.begin();
             for(; it != tmpFDMap.end(); it++)

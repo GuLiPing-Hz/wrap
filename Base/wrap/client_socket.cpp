@@ -15,7 +15,7 @@ namespace Wrap {
 
         if (len == SOCKET_ERROR) {
 #ifdef WIN32
-            DWORD derrno = GetLastError();
+            DWORD derrno = GetLastError();//这里的错误码，必须用windows的GetLastError获取。
             if (derrno != WSAEWOULDBLOCK)
             {
                 onSocketRecvError(derrno);
