@@ -16,14 +16,22 @@ namespace Wrap {
         if (len == SOCKET_ERROR) {
 #ifdef WIN32
             DWORD derrno = GetLastError();//这里的错误码，必须用windows的GetLastError获取。
-            if (derrno != WSAEWOULDBLOCK)
+			if (derrno == WSAECONNABORTED || derrno == WSAECONNRESET) {
+				onSocketClose();
+				closeSocket();
+			}
+            else if (derrno != WSAEWOULDBLOCK)
             {
                 onSocketRecvError(derrno);
 				closeSocket();
             }
 #else//Linux
             int errorcode = errno;
-            if (errorcode != EAGAIN) {
+			if (derrno == ECONNRESET) {
+				onSocketClose();
+				closeSocket();
+			}
+			else if (errorcode != EAGAIN) {
                 onSocketRecvError(errorcode);
 				closeSocket();
             }
