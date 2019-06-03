@@ -26,15 +26,15 @@ namespace Wrap {
 				closeSocket();
             }
 #else//Linux
-            int errorcode = errno;
+            int derrno = errno;
 			if (derrno == ECONNRESET) {
 				onSocketClose();
 				closeSocket();
 			}
-			else if (errorcode != EAGAIN) {
-                onSocketRecvError(errorcode);
+			else if (derrno != EAGAIN) {
+				onSocketRecvError(derrno);
 				closeSocket();
-            }
+			}
 #endif
             return;
         }
